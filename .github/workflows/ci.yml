@@ -22,6 +22,7 @@ jobs:
         with:
           ruby-version: '3.4.1'
           bundler-cache: true
+          working-directory: cms
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
@@ -42,6 +43,7 @@ jobs:
         with:
           ruby-version: '3.4.1'
           bundler-cache: true
+          working-directory: cms
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: bin/importmap audit
@@ -62,6 +64,7 @@ jobs:
         with:
           ruby-version: '3.4.1'
           bundler-cache: true
+          working-directory: cms
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
@@ -95,6 +98,7 @@ jobs:
         with:
           ruby-version: '3.4.1'
           bundler-cache: true
+          working-directory: cms
 
       - name: Run tests
         env:

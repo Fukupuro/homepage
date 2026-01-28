@@ -87,11 +87,12 @@ jobs:
         working-directory: cms
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config google-chrome-stable
-
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config google-chrome-stable
+        working-directory: .
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1

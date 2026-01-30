@@ -1,5 +1,6 @@
 ---
 import Header from "@/components/layout/Header/index.astro";
+import background from "../assets/background.svg";
 
 import "@/styles/global.css";
 import '@splidejs/splide/css/skyblue';
@@ -20,6 +21,7 @@ const title = props.title || "福プロ | 福山大学学友会プログラミ�
 		<title>{title}</title>
 	</head>
 	<body>
+		<img id="background" src={background.src} alt="" fetchpriority="high" />
 		<Header />
 		<slot />
 	</body>
@@ -31,5 +33,15 @@ const title = props.title || "福プロ | 福山大学学友会プログラミ�
 		margin: 0;
 		width: 100%;
 		height: 100%;
+	}
+
+	#background {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		filter: blur(250px);
 	}
 </style>

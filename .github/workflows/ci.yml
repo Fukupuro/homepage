@@ -4,12 +4,32 @@ on:
   pull_request:
     paths:
       - 'cms/**'
+      - 'astro/**'
   push:
     paths:
       - 'cms/**'
+      - 'astro/**'
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      cms: ${{ steps.filter.outputs.cms }}
+      astro: ${{ steps.filter.outputs.astro }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            cms:
+              - 'cms/**'
+            astro:
+              - 'astro/**'
+
   scan_ruby:
+    needs: changes
+    if: needs.changes.outputs.cms == 'true'
     runs-on: ubuntu-latest
 
     defaults:
@@ -31,6 +51,8 @@ jobs:
         run: bin/brakeman --no-pager
 
   scan_js:
+    needs: changes
+    if: needs.changes.outputs.cms == 'true'
     runs-on: ubuntu-latest
 
     defaults:
@@ -52,6 +74,8 @@ jobs:
         run: bin/importmap audit
 
   lint:
+    needs: changes
+    if: needs.changes.outputs.cms == 'true'
     runs-on: ubuntu-latest
 
     defaults:
@@ -73,6 +97,8 @@ jobs:
         run: bin/rubocop -f github
 
   test:
+    needs: changes
+    if: needs.changes.outputs.cms == 'true'
     runs-on: ubuntu-latest
 
     services:
@@ -118,4 +144,62 @@ jobs:
           name: screenshots
           path: ${{ github.workspace }}/cms/tmp/screenshots
           if-no-files-found: ignore
+
+  astro_lint:
+    needs: changes
+    if: needs.changes.outputs.astro == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: astro
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: astro/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (Biome)
+        run: pnpm run lint
+
+  astro_build:
+    needs: changes
+    if: needs.changes.outputs.astro == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: astro
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: astro/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
 

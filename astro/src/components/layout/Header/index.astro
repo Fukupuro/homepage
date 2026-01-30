@@ -1,0 +1,26 @@
+---
+import PC from "./pc.astro";
+import Mobile from "./mobile.astro";
+
+import { Icon } from 'astro-icon/components';
+---
+
+<header class="bg-gray-100 p-4 sticky top-0 h-20">
+  <a href="/" class="flex items-center gap-2">
+    <Icon name="logo" size={38} />
+    <div class="flex flex-col">
+      <p class="text-lg text-black-500">福山大学学友会</p>
+      <p class="text-base text-blue-500">プログラミンサークル</p>
+    </div>
+  </a>
+  <PC />
+  <Mobile />
+</header>
+
+<style>
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>

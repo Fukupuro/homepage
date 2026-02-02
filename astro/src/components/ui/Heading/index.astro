@@ -1,0 +1,49 @@
+---
+type Props = {
+  as: 'h1' | 'h2' | 'h3' | 'h4';
+  class?: string;
+};
+
+const { as, class: className, ...rest } = Astro.props as Props;
+
+const Tag = as;
+---
+
+<Tag class={className} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  h1 {
+    @apply text-4xl font-bold text-gray-800;
+    
+    &::before {
+      content: '#';
+      @apply text-blue-500 mr-2;
+    }
+  }
+  h2 {
+    @apply text-3xl font-bold text-gray-800;
+
+    &::before {
+      content: '##';
+      @apply text-blue-500 mr-2;
+    }
+  }
+  h3 {
+    @apply text-2xl font-bold text-gray-800;
+
+    &::before {
+      content: '###';
+      @apply text-blue-500 mr-2;
+    }
+  }
+  h4 {
+    @apply text-xl font-bold text-gray-800;
+
+    &::before {
+      content: '####';
+      @apply text-blue-500 mr-2;
+    }
+  }
+</style>

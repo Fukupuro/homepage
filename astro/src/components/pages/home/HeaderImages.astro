@@ -1,14 +1,14 @@
 ---
-import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  "/src/assets/images/header_images/*.png",
-  { eager: true }
+	"/src/assets/images/header_images/*.png",
+	{ eager: true },
 );
 const images = Object.entries(imageModules)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, mod]) => mod.default);
+	.sort(([a], [b]) => a.localeCompare(b))
+	.map(([, mod]) => mod.default);
 ---
 
 <div class="header-images-splide splide" role="group" aria-label="ヘッダー画像">

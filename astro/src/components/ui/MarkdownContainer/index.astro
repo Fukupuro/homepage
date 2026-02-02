@@ -3,13 +3,8 @@ import { marked } from "marked";
 
 const props = Astro.props;
 const markdown = props.markdown;
+const className = props.className;
 
 const parsedMarkdown = marked.parse(markdown);
 ---
-<div class="markdown-container" set:html={parsedMarkdown} />
-
-<style>
-  .markdown-container {
-    @apply text-gray-800;
-  }
-</style>
+<div class={`markdown-body bg-white/0 ${className}`} set:html={parsedMarkdown} />

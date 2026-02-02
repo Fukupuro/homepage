@@ -14,10 +14,10 @@ const images = Object.entries(imageModules)
 <div class="header-images-splide splide" role="group" aria-label="ヘッダー画像">
   <div class="splide__track">
     <ul class="splide__list">
-      {images.map((image) => (
-        <li class="splide__slide">
-          <div class="h-48 w-full overflow-hidden">
-            <Image src={image} alt="ヘッダーイメージ" class="block h-full w-full object-cover object-center" />
+      {images.map((image, index) => (  
+        <li class="splide__slide">  
+          <div class="h-48 w-full overflow-hidden">  
+            <Image src={image} alt={`福プロの活動風景${index + 1}`} class="block h-full w-full object-cover object-center" />  
           </div>
         </li>
       ))}

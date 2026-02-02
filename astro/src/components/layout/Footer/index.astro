@@ -1,0 +1,18 @@
+---
+import { Icon } from "astro-icon/components";
+import { PATH } from "@/constants";
+---
+
+<footer class="bg-gray-100 p-4 h-20 gap-4 flex flex-col">
+  <hr class="border-gray-300" />
+  <div class="flex items-center gap-2 justify-between">
+    <a href={PATH.HOME}>
+      <Icon name="logo" size={38} />
+    </a>
+    <p>
+      <span class="whitespace-nowrap">&copy; 2026</span>
+      <span class="whitespace-nowrap">福山大学学友会</span>
+      <span class="whitespace-nowrap">プログラミングサークル</span>
+    </p>
+  </div>
+</footer>

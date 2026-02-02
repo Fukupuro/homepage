@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import MarkdownContainer from "@/components/ui/MarkdownContainer/index.astro";
+import ActivityHeading from "./ActivityHeading.astro";
+import type { ActivityDetail } from "./types.ts";
+
+type Props = {
+	activityDetails: ActivityDetail[];
+};
+const props: Props = Astro.props;
+const { activityDetails } = props;
+---
+
+<div class="sm:hidden block py-6">
+  <div class="activity-detail-splide splide" role="group" aria-label="活動詳細スライダー">
+    <div class="splide__track">
+      <ul class="splide__list mx-4">
+        {activityDetails.map((activity) => (
+          <li class="splide__slide">
+            <div class="activity-detail">
+              <ActivityHeading title={activity.title} />
+              <Image src={activity.image} alt={activity.title} class="w-80 h-48 object-cover mx-auto" />
+              <MarkdownContainer markdown={activity.description} className="text-lg text-gray-800" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  import Splide from "@splidejs/splide";
+
+  const selector = ".activity-detail-splide";
+  const elements = document.querySelectorAll(selector);
+
+  elements.forEach((el) => {
+    if (!(el instanceof HTMLElement)) return;
+
+    // 既にこの要素に対して Splide を初期化している場合はスキップ
+    if (el.dataset.splideInitialized === "true") {
+      return;
+    }
+
+    el.dataset.splideInitialized = "true";
+
+    new Splide(el, {
+      type: "loop",
+      autoplay: true,
+      interval: 10000,
+      arrows: true,
+      pagination: true,
+      drag: true,
+      keyboard: true,
+      wheel: false,
+    }).mount();
+  });
+</script>
+
+
+<style>
+  .activity-detail {
+    @apply flex flex-col border-2 border-gray-500 pb-4 rounded-md p-4 bg-white/50 gap-4 w-[calc(100%-100px)] mx-auto mb-10;
+    min-height: 28rem;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import groupActivitiesImage from "@/assets/images/activities/group.jpeg";
+import lectureImage from "@/assets/images/activities/lecture.jpeg";
+import ltImage from "@/assets/images/activities/lt.jpeg";
+import regionImage from "@/assets/images/activities/region.jpeg";
+import Heading from "@/components/ui/Heading/index.astro";
+import { PATH } from "@/constants";
+import MobileActivityDetails from "./mobile.astro";
+import PCActivityDetails from "./pc.astro";
+import type { ActivityDetail } from "./types";
+
+const activityDetails: ActivityDetail[] = [
+	{
+		title: "班活動",
+		description: `アプリ班・競プロ班・ゲーム班・XR班の４つの班で活動しています。\n\n班長を中心にそれぞれ活動しています。\n詳しくは[こちら](${PATH.BLOG.GROUP_ACTIVITIES})をご覧ください。`,
+		image: groupActivitiesImage,
+	},
+	{
+		title: "LT会",
+		description: `定期的にLT会を開催して、お互いの進捗や知見などを発表しています。\n\n発表経験を積むことや、新しいことに興味を持ってもらうことを目的に行っています。`,
+		image: ltImage,
+	},
+	{
+		title: "地域交流",
+		description: `地域の方を対象にLINE講習会やプログラミング教室の開催をしています。\n\n地域の行事などに参加し、ITの技術を活用して地域貢献をしています。`,
+		image: regionImage,
+	},
+	{
+		title: "講座",
+		description: `所属している先輩たちによる技術や就活の講座を開催しています。\n\n今までGithub講座やMarkdown講座などを行ってきました。`,
+		image: lectureImage,
+	},
+];
+---
+
+<section id="activity-details">
+  <Heading as="h2">活動内容</Heading>
+  <PCActivityDetails activityDetails={activityDetails} />
+  <MobileActivityDetails activityDetails={activityDetails} />
+</section>

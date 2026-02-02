@@ -1,0 +1,14 @@
+---
+import { marked } from "marked";
+
+type Props = {
+	markdown: string;
+	className?: string;
+};
+
+const props: Props = Astro.props;
+const { markdown, className } = props;
+
+const parsedMarkdown = marked.parse(markdown);
+---
+<div class={`markdown-body ${className}`} style="background-color: transparent !important;" set:html={parsedMarkdown} />

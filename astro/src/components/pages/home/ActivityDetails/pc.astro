@@ -1,0 +1,30 @@
+---
+import { Image } from "astro:assets";
+import MarkdownContainer from "@/components/ui/MarkdownContainer/index.astro";
+import ActivityHeading from "./ActivityHeading.astro";
+import type { ActivityDetail } from "./types.ts";
+
+type Props = {
+	activityDetails: ActivityDetail[];
+};
+const props: Props = Astro.props;
+const { activityDetails } = props;
+---
+
+<div class="sm:block hidden space-y-4 py-6">
+  {activityDetails.map((activity) => (
+    <div class="activity-detail">
+      <div>
+        <ActivityHeading title={activity.title} />
+        <MarkdownContainer markdown={activity.description} className="text-lg text-gray-800" />
+      </div>
+      <Image src={activity.image} alt={activity.title} class="w-80 h-48 object-cover" />
+    </div>
+  ))}
+</div>
+
+<style>
+  .activity-detail {
+    @apply flex justify-between border-2 border-gray-500 pb-4 rounded-md p-4 bg-white/50;
+  }
+</style>

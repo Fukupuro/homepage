@@ -13,7 +13,8 @@
 			"**/*.jsx",
 			"**/*.json",
 			"**/*.astro",
-			"**/*.css"
+			"**/*.css",
+			"!src/styles/github-markdown.css"
 		],
 		"ignoreUnknown": true
 	},

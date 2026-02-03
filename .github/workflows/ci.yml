@@ -181,6 +181,9 @@ jobs:
     defaults:
       run:
         working-directory: astro
+    env:
+      FORM_URL: https://forms.gle/hogefugapiyo
+      MAIL_ADDRESS: example@example.com
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

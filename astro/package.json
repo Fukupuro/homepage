@@ -12,7 +12,7 @@
 		"format": "biome format --write ."
 	},
 	"dependencies": {
-		"@iconify-json/ri": "^1.2.8",
+		"@iconify-json/ri": "^1.2.9",
 		"@splidejs/splide": "^4.1.4",
 		"astro": "^5.16.15",
 		"astro-icon": "^1.1.5",

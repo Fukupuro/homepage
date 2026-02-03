@@ -5,5 +5,5 @@ export const PATH = {
 	BLOG: {
 		GROUP_ACTIVITIES: "/blogs/group-activities/",
 	},
-	SEARCH: `${process.env.BACKEND_URL}/api/v1/blogs/search`,
+	SEARCH: `${import.meta.env.BACKEND_URL}/api/v1/blogs/search`,
 };

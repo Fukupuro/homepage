@@ -3,7 +3,11 @@ import { Icon } from "astro-icon/components";
 import Heading from "@/components/ui/Heading/index.astro";
 
 const formUrl = import.meta.env.FORM_URL;
-const mailAddress = import.meta.env.MAIL_ADDRESS;
+const mailAddress = import.meta.env.MAIL_ADDRESS
+
+if (!formUrl || !mailAddress) {
+  throw new Error("Contact: FORM_URL または MAIL_ADDRESS が設定されていません");
+}
 ---
 
 <section class="contact">

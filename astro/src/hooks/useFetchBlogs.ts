@@ -116,8 +116,7 @@ export async function fetchBlogs(params: FetchBlogsParams = {}): Promise<FetchBl
 		}
 
 		return await fetchBlogsFromApi(params);
-	} catch (error) {
-		console.error("Failed to fetch blogs from API. Falling back to mock data.", error);
+	} catch (_error) {
 		return getMockBlogs(params);
 	}
 }

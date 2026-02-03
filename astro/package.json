@@ -16,6 +16,7 @@
 		"@splidejs/splide": "^4.1.4",
 		"astro": "^5.16.15",
 		"astro-icon": "^1.1.5",
+		"dayjs": "^1.11.19",
 		"marked": "^17.0.1",
 		"sharp": "^0.34.5"
 	},

@@ -1,0 +1,57 @@
+---
+import { Icon } from "astro-icon/components";
+import dayjs from "dayjs";
+import Heading from "@/components/ui/Heading/index.astro";
+import Tags from "@/components/ui/Tags/index.astro";
+import TextLink from "@/components/ui/TextLink/index.astro";
+import { PATH } from "@/constants";
+import { fetchBlogs } from "@/hooks/useFetchBlogs";
+import Thumbnail from "./Thumbnail.astro";
+
+const blogs = await fetchBlogs({ limit: 3 });
+---
+
+<section id="latest-blogs">
+  <Heading as="h2">最新の記事</Heading>
+
+  <div class="grid sm:grid-cols-3 grid-cols-1 gap-4">
+    {
+      blogs.blogs.map((blog) => (
+        <div class="latest-blog">
+          <Thumbnail src={blog.thumbnail} title={blog.title} />
+          <div>
+            <p class="text-sm text-gray-500">
+              {dayjs(blog.published_at).format("YYYY-MM-DD")}
+            </p>
+            <a href={blog.link} target="_blank" rel="noopener noreferrer">
+              <h3>{blog.title}</h3>
+            </a>
+            <Tags tags={blog.tags} />
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  <TextLink href={PATH.BLOGS} className="mx-auto">
+    <span>ブログ一覧はこちら</span>
+    <Icon slot="suffix" name="ri:external-link-fill" size={16} />
+  </TextLink>
+</section>
+
+<style>
+  #latest-blogs {
+    @apply py-6 gap-4 flex flex-col;
+  }
+
+  .latest-blog {
+    @apply bg-white p-4 rounded-md sm:block flex justify-between flex-row-reverse border shadow-md;
+  
+    h3 {
+      @apply text-lg text-gray-800 font-bold line-clamp-3;
+
+      &:hover {
+        @apply underline;
+      }
+    }
+  }
+</style>

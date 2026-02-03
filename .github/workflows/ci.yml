@@ -182,6 +182,7 @@ jobs:
       run:
         working-directory: astro
     env:
+      BACKEND_URL: http://localhost:3000
       FORM_URL: https://forms.gle/hogefugapiyo
       MAIL_ADDRESS: example@example.com
     steps:

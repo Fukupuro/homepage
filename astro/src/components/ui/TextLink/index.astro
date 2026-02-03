@@ -1,0 +1,22 @@
+---
+type Props = {
+	href: string;
+	className?: string;
+};
+
+const { href, className } = Astro.props;
+const hasSuffix = Astro.slots.has("suffix");
+const hasPrefix = Astro.slots.has("prefix");
+---
+
+<a href={href} class={className}>
+  {hasPrefix && <slot name="prefix" />}
+  <slot />
+  {hasSuffix && <slot name="suffix" />}
+</a>
+<style>
+  a {
+    @apply flex items-center gap-2 w-fit text-gray-800 border-b border-gray-800;
+  }
+</style>
+

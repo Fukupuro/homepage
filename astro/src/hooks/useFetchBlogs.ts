@@ -20,7 +20,7 @@ const MOCK_BLOGS: BlogItem[] = [
 			"これはRailsに関するブログ記事です。APIの作成方法やReactとの連携について解説しています。",
 		author: "著者1",
 		link: "/blogs/1/",
-    thumbnail: undefined,
+		thumbnail: undefined,
 		published_at: "2026-01-30T07:52:45.912Z",
 		tags: [
 			{ id: 1, name: "Rails" },
@@ -30,7 +30,8 @@ const MOCK_BLOGS: BlogItem[] = [
 	},
 	{
 		id: 2,
-		title: "限界学生の就職活動体験記 ～貯金ゼロ、ES全滅、面接連敗の僕が、それでもスーツを着て今日も社会に祈りを捧げる話～",
+		title:
+			"限界学生の就職活動体験記 ～貯金ゼロ、ES全滅、面接連敗の僕が、それでもスーツを着て今日も社会に祈りを捧げる話～",
 		content: "キーワード検索・タグ検索のテスト用です。",
 		author: "著者2",
 		link: "/blogs/2/",
@@ -63,14 +64,12 @@ function getMockBlogs(params: FetchBlogsParams): FetchBlogsResult {
 	if (keyword) {
 		const k = keyword.toLowerCase();
 		filtered = filtered.filter(
-			(b) =>
-				b.title.toLowerCase().includes(k) ||
-				b.content.toLowerCase().includes(k),
+			(b) => b.title.toLowerCase().includes(k) || b.content.toLowerCase().includes(k),
 		);
 	}
 	if (tag) {
-		filtered = filtered.filter(
-			(b) => b.tags.some((t) => t.name.toLowerCase() === tag.toLowerCase()),
+		filtered = filtered.filter((b) =>
+			b.tags.some((t) => t.name.toLowerCase() === tag.toLowerCase()),
 		);
 	}
 

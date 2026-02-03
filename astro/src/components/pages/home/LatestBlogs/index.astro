@@ -1,12 +1,12 @@
 ---
-import Heading from "@/components/ui/Heading/index.astro";
-import { PATH } from "@/constants";
 import { Icon } from "astro-icon/components";
-import TextLink from "@/components/ui/TextLink/index.astro";
-import { fetchBlogs } from "@/hooks/useFetchBlogs";
 import dayjs from "dayjs";
-import Thumbnail from "./Thumbnail.astro";
+import Heading from "@/components/ui/Heading/index.astro";
 import Tags from "@/components/ui/Tags/index.astro";
+import TextLink from "@/components/ui/TextLink/index.astro";
+import { PATH } from "@/constants";
+import { fetchBlogs } from "@/hooks/useFetchBlogs";
+import Thumbnail from "./Thumbnail.astro";
 
 const blogs = await fetchBlogs({ limit: 3 });
 ---

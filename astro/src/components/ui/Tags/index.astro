@@ -1,10 +1,10 @@
 ---
+import { Icon } from "astro-icon/components";
 import { PATH } from "@/constants";
 import type { BlogTag } from "@/types";
-import { Icon } from "astro-icon/components";
 
 type Props = {
-  tags: BlogTag[];
+	tags: BlogTag[];
 };
 
 const { tags } = Astro.props as Props;

@@ -7,8 +7,9 @@ import TextLink from "@/components/ui/TextLink/index.astro";
 import { PATH } from "@/constants";
 import { fetchBlogs } from "@/hooks/useFetchBlogs";
 import Thumbnail from "./Thumbnail.astro";
+import type { BlogItem } from "@/types";
 
-const blogs = await fetchBlogs({ limit: 3 });
+const { blogs } = await fetchBlogs({ limit: 3 });
 ---
 
 <section id="latest-blogs">
@@ -16,7 +17,7 @@ const blogs = await fetchBlogs({ limit: 3 });
 
   <div class="grid sm:grid-cols-3 grid-cols-1 gap-4">
     {
-      blogs.blogs.map((blog) => (
+      blogs.map((blog: BlogItem) => (
         <div class="latest-blog">
           <Thumbnail src={blog.thumbnail} title={blog.title} />
           <div>

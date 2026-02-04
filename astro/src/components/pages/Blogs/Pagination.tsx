@@ -82,7 +82,7 @@ export default function Pagination({
         type="button"
         onClick={handlePrev}
         disabled={currentPage === 1}
-        className="px-3 py-1 text-sm rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-3 py-1 text-sm rounded border border-gray-300 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
         前へ
       </button>
@@ -101,7 +101,7 @@ export default function Pagination({
                 className={`px-3 py-1 text-sm rounded border ${
                   item === currentPage
                     ? "bg-blue-600 text-white border-blue-600"
-                    : "border-gray-300 text-gray-700 hover:bg-gray-100"
+                    : "bg-white border-gray-300 text-gray-700 hover:bg-gray-100"
                 }`}
               >
                 {item}
@@ -115,7 +115,7 @@ export default function Pagination({
         type="button"
         onClick={handleNext}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 text-sm rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-3 py-1 text-sm rounded border border-gray-300 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
         次へ
       </button>

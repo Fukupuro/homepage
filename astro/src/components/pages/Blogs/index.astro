@@ -1,22 +1,10 @@
 ---
-import { fetchBlogs } from "@/hooks/useFetchBlogs";
 import Heading from "@/components/ui/Heading/index.astro";
 import Container from "@/components/ui/Container/index.astro";
-import BlogCard from "@/components/ui/BlogCard/index.astro";
-import type { BlogItem } from "@/types";
-
-const { blogs } = await fetchBlogs({ limit: 9 });
+import BlogContent from "./BlogContent";
 ---
 
 <Container>
   <Heading as="h1">記事一覧</Heading>
-  <section id="blogs">
-    {blogs.map((blog: BlogItem) => <BlogCard blog={blog} />)}
-  </section>
+  <BlogContent client:only />
 </Container>
-
-<style>
-  #blogs {
-    @apply grid md:grid-cols-3 grid-cols-1 gap-4 py-6;
-  }
-</style>

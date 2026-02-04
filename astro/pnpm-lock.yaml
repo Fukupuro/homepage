@@ -14,6 +14,9 @@ importers:
       '@iconify-json/ri':
         specifier: ^1.2.9
         version: 1.2.9
+      '@iconify/react':
+        specifier: ^6.0.2
+        version: 6.0.2(react@19.2.4)
       '@splidejs/splide':
         specifier: ^4.1.4
         version: 4.1.4
@@ -416,6 +419,11 @@ packages:
 
   '@iconify-json/ri@1.2.9':
     resolution: {integrity: sha512-r9z/Lh0f0At6O6AwO/fpmRAa8jHoL/wSqA188ognPL1whFIBXXbrp1IR4m6OcuPwa41jJdzjCNxLbg7uOt7kYg==}
+
+  '@iconify/react@6.0.2':
+    resolution: {integrity: sha512-SMmC2sactfpJD427WJEDN6PMyznTFMhByK9yLW0gOTtnjzzbsi/Ke/XqsumsavFPwNiXs8jSiYeZTmLCLwO+Fg==}
+    peerDependencies:
+      react: '>=16'
 
   '@iconify/tools@4.2.0':
     resolution: {integrity: sha512-WRxPva/ipxYkqZd1+CkEAQmd86dQmrwH0vwK89gmp2Kh2WyyVw57XbPng0NehP3x4V1LzLsXUneP1uMfTMZmUA==}
@@ -2617,6 +2625,11 @@ snapshots:
   '@iconify-json/ri@1.2.9':
     dependencies:
       '@iconify/types': 2.0.0
+
+  '@iconify/react@6.0.2(react@19.2.4)':
+    dependencies:
+      '@iconify/types': 2.0.0
+      react: 19.2.4
 
   '@iconify/tools@4.2.0':
     dependencies:

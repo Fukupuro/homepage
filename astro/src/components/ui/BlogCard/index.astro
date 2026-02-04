@@ -1,12 +1,12 @@
 ---
-import Thumbnail from "./Thumbnail.astro";
-import dayjs from "dayjs";
-import type { BlogItem } from "@/types";
 import { Icon } from "astro-icon/components";
+import dayjs from "dayjs";
 import { PATH } from "@/constants";
+import type { BlogItem } from "@/types";
+import Thumbnail from "./Thumbnail.astro";
 
 type Props = {
-  blog: BlogItem;
+	blog: BlogItem;
 };
 
 const { blog } = Astro.props as Props;

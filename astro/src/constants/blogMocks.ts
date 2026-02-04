@@ -4,8 +4,10 @@ export const MOCK_BLOGS: BlogItem[] = [
 	{
 		id: "1",
 		title: "Railsの基本",
-		content: "これはRailsに関するブログ記事です。APIの作成方法やReactとの連携について解説しています。",
-		description: "これはRailsに関するブログ記事です。APIの作成方法やReactとの連携について解説しています。",
+		content:
+			"これはRailsに関するブログ記事です。APIの作成方法やReactとの連携について解説しています。",
+		description:
+			"これはRailsに関するブログ記事です。APIの作成方法やReactとの連携について解説しています。",
 		author: "著者1",
 		link: "/blogs/1/",
 		thumbnail: undefined,
@@ -14,7 +16,8 @@ export const MOCK_BLOGS: BlogItem[] = [
 	},
 	{
 		id: "2",
-		title: "限界学生の就職活動体験記 ～貯金ゼロ、ES全滅、面接連敗の僕が、それでもスーツを着て今日も社会に祈りを捧げる話～",
+		title:
+			"限界学生の就職活動体験記 ～貯金ゼロ、ES全滅、面接連敗の僕が、それでもスーツを着て今日も社会に祈りを捧げる話～",
 		content: "キーワード検索・タグ検索のテスト用です。",
 		description: "キーワード検索・タグ検索のテスト用です。",
 		author: "著者2",

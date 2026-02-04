@@ -1,7 +1,7 @@
 export default function NoDataView() {
-  return (
-    <div className="text-center grid place-items-center">
-      <p>記事が見つかりませんでした</p>
-    </div>
-  );
+	return (
+		<div className="grid place-items-center text-center">
+			<p>記事が見つかりませんでした</p>
+		</div>
+	);
 }

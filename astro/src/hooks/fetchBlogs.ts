@@ -1,5 +1,5 @@
-import { PATH } from "@/constants/path";
 import { MOCK_BLOGS } from "@/constants";
+import { PATH } from "@/constants/path";
 import type { BlogItem } from "@/types";
 
 export type FetchBlogsParams = {
@@ -85,14 +85,10 @@ function getMockBlogs(params: FetchBlogsParams): FetchBlogsResult {
 		const { tag, author, keywords } = parseQuery(q);
 
 		if (tag) {
-			filtered = filtered.filter((b) =>
-				b.tags.some((t) => t.toLowerCase() === tag.toLowerCase()),
-			);
+			filtered = filtered.filter((b) => b.tags.some((t) => t.toLowerCase() === tag.toLowerCase()));
 		}
 		if (author) {
-			filtered = filtered.filter(
-				(b) => b.author.toLowerCase().includes(author.toLowerCase()),
-			);
+			filtered = filtered.filter((b) => b.author.toLowerCase().includes(author.toLowerCase()));
 		}
 		for (const kw of keywords) {
 			const k = kw.toLowerCase();
@@ -170,7 +166,9 @@ export async function fetchAllTags(): Promise<string[]> {
 			// モックデータから全てのタグを取得
 			const allTags = new Set<string>();
 			MOCK_BLOGS.forEach((blog) => {
-				blog.tags.forEach((tag) => allTags.add(tag));
+				blog.tags.forEach((tag) => {
+					allTags.add(tag);
+				});
 			});
 			return Array.from(allTags).sort();
 		}
@@ -180,14 +178,18 @@ export async function fetchAllTags(): Promise<string[]> {
 		const result = await fetchBlogsFromApi({ limit: 1000, page: 1 });
 		const allTags = new Set<string>();
 		result.blogs.forEach((blog) => {
-			blog.tags.forEach((tag) => allTags.add(tag));
+			blog.tags.forEach((tag) => {
+				allTags.add(tag);
+			});
 		});
 		return Array.from(allTags).sort();
 	} catch (_error) {
 		// エラー時はモックデータから取得
 		const allTags = new Set<string>();
 		MOCK_BLOGS.forEach((blog) => {
-			blog.tags.forEach((tag) => allTags.add(tag));
+			blog.tags.forEach((tag) => {
+				allTags.add(tag);
+			});
 		});
 		return Array.from(allTags).sort();
 	}

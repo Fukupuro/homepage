@@ -3,6 +3,7 @@ import BlogCard from "@/components/ui/BlogCard";
 import type { BlogItem } from "@/types";
 import SearchForm from "./SearchForm";
 import Pagination from "./Pagination";
+import TagList from "./TagList";
 import { useBlogList } from "./useBlogList";
 import NoDataView from "./NoDataView";
 import LoadingView from "./LoadingView";
@@ -17,6 +18,8 @@ export default function BlogContent() {
     data,
     error,
     isLoading,
+    allTags,
+    handleTagClick,
   } = useBlogList();
 
   if (error) {
@@ -32,6 +35,7 @@ export default function BlogContent() {
         onChange={setInputValue}
         onSubmit={handleSearchSubmit}
       />
+      <TagList tags={allTags} onTagClick={handleTagClick} />
       <div className="py-6">
         {isLoading ? (
           <LoadingView />

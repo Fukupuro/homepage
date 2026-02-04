@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import useSWR from "swr";
-import { fetchBlogs, type FetchBlogsResult } from "@/hooks/fetchBlogs";
+import { fetchBlogs, fetchAllTags, type FetchBlogsResult } from "@/hooks/fetchBlogs";
 
 /** 検索窓の空白を+に変換して q パラメータ用の文字列を生成 */
 function toQueryString(value: string): string {
@@ -25,6 +25,13 @@ export function useBlogList() {
   const handleSearchSubmit = () => {
     const formatted = toQueryString(inputValue);
     setQuery(formatted);
+    setPage(1);
+  };
+
+  const handleTagClick = (tag: string) => {
+    const tagQuery = `tag:${tag}`;
+    setInputValue(tagQuery);
+    setQuery(tagQuery);
     setPage(1);
   };
 
@@ -64,15 +71,22 @@ export function useBlogList() {
     () => fetchBlogs({ q: query || undefined, page, limit: 9 })
   );
 
+  const { data: allTags = [] } = useSWR<string[]>(
+    "/api/blogs/tags",
+    () => fetchAllTags()
+  );
+
   return {
     inputValue,
     setInputValue,
     page,
     setPage,
     handleSearchSubmit,
+    handleTagClick,
     data,
     error,
     isLoading,
+    allTags,
   };
 }
 

@@ -155,3 +155,40 @@ export async function fetchBlogs(params: FetchBlogsParams = {}): Promise<FetchBl
 		return getMockBlogs(params);
 	}
 }
+
+/**
+ * 全てのブログからユニークなタグのリストを取得
+ */
+export async function fetchAllTags(): Promise<string[]> {
+	const isDev = typeof import.meta !== "undefined" && import.meta.env?.DEV;
+	const isTest =
+		(typeof import.meta !== "undefined" && import.meta.env?.MODE === "test") ||
+		(typeof process !== "undefined" && process.env?.NODE_ENV === "test");
+
+	try {
+		if (isDev || isTest) {
+			// モックデータから全てのタグを取得
+			const allTags = new Set<string>();
+			MOCK_BLOGS.forEach((blog) => {
+				blog.tags.forEach((tag) => allTags.add(tag));
+			});
+			return Array.from(allTags).sort();
+		}
+
+		// APIから全てのブログを取得してタグを抽出
+		// 注意: 実際のAPIでは全件取得のエンドポイントが必要かもしれません
+		const result = await fetchBlogsFromApi({ limit: 1000, page: 1 });
+		const allTags = new Set<string>();
+		result.blogs.forEach((blog) => {
+			blog.tags.forEach((tag) => allTags.add(tag));
+		});
+		return Array.from(allTags).sort();
+	} catch (_error) {
+		// エラー時はモックデータから取得
+		const allTags = new Set<string>();
+		MOCK_BLOGS.forEach((blog) => {
+			blog.tags.forEach((tag) => allTags.add(tag));
+		});
+		return Array.from(allTags).sort();
+	}
+}

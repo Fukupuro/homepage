@@ -4,7 +4,9 @@ import { fetchBlogs } from "@/hooks/fetchBlogs";
 function getTagsFromMock(): string[] {
 	const allTags = new Set<string>();
 	MOCK_BLOGS.forEach((blog) => {
-		blog.tags.forEach((tag) => allTags.add(tag));
+		blog.tags.forEach((tag) => {
+			allTags.add(tag);
+		});
 	});
 	return Array.from(allTags).sort();
 }
@@ -41,7 +43,9 @@ export async function fetchTags(): Promise<string[]> {
 			const { blogs } = await fetchBlogs({ limit: 1000, page: 1 });
 			const allTags = new Set<string>();
 			blogs.forEach((blog) => {
-				blog.tags.forEach((tag) => allTags.add(tag));
+				blog.tags.forEach((tag) => {
+					allTags.add(tag);
+				});
 			});
 			return Array.from(allTags).sort();
 		}

@@ -1,8 +1,9 @@
 ---
 import Thumbnail from "./Thumbnail.astro";
 import dayjs from "dayjs";
-import Tags from "@/components/ui/Tags/index.astro";
 import type { BlogItem } from "@/types";
+import { Icon } from "astro-icon/components";
+import { PATH } from "@/constants";
 
 type Props = {
   blog: BlogItem;
@@ -20,7 +21,14 @@ const { blog } = Astro.props as Props;
     <a href={blog.link} target="_blank" rel="noopener noreferrer">
       <h3>{blog.title}</h3>
     </a>
-    <Tags tags={blog.tags} />
+    <div class="flex flex-wrap gap-2">
+      {blog.tags.map((tag) => (
+        <a class="flex items-center" href={`${PATH.BLOGS}?tag=${encodeURIComponent(tag.name)}`}>
+          <Icon name="ri:hashtag" />
+          <span class="text-sm text-gray-500">{tag.name}</span>
+        </a>
+      ))}
+    </div>
   </div>
 </div>
 

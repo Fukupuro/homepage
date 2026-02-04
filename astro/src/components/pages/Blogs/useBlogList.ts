@@ -57,8 +57,8 @@ export function useBlogList() {
   }, [page]);
 
   const { data, error, isLoading } = useSWR<FetchBlogsResult>(
-    `/api/blogs?q=${query}&tag=${tag ?? ""}&page=${page}&limit=3`,
-    () => fetchBlogs({ q: query || undefined, tag, page, limit: 3 })
+    `/api/blogs?q=${query}&tag=${tag ?? ""}&page=${page}&limit=9`,
+    () => fetchBlogs({ q: query || undefined, tag, page, limit: 9 })
   );
 
   return {

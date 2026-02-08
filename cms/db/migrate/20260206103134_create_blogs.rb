@@ -4,7 +4,7 @@ class CreateBlogs < ActiveRecord::Migration[8.1]
       t.string :title, null: false
       t.text :content, null: false
       t.string :author
-      t.string :link
+      t.text :description
       t.datetime :published_at
 
       t.timestamps

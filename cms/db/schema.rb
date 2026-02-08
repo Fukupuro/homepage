@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_06_171244) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_06_172001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,20 +42,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_06_171244) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "blogs", force: :cascade do |t|
+  create_table "blog_tags", force: :cascade do |t|
+    t.uuid "blog_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_id", "tag_id"], name: "index_blog_tags_on_blog_id_and_tag_id", unique: true
+    t.index ["blog_id"], name: "index_blog_tags_on_blog_id"
+    t.index ["tag_id"], name: "index_blog_tags_on_tag_id"
+  end
+
+  create_table "blogs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "author"
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.string "link"
     t.datetime "published_at"
-    t.text "tags", default: [], null: false, array: true
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["author"], name: "index_blogs_on_author"
     t.index ["published_at"], name: "index_blogs_on_published_at"
-    t.index ["tags"], name: "index_blogs_on_tags", using: :gin
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "blog_tags", "blogs"
+  add_foreign_key "blog_tags", "tags"
 end

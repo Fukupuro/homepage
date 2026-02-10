@@ -18,7 +18,7 @@ const { blog } = Astro.props as Props;
     <p class="text-sm text-gray-500">
       {dayjs(blog.published_at).format("YYYY-MM-DD")}
     </p>
-    <a href={blog.link} target="_blank" rel="noopener noreferrer">
+    <a href={`${PATH.BLOGS}/${blog.id}`}>
       <h3>{blog.title}</h3>
     </a>
     <div class="flex flex-wrap gap-2">

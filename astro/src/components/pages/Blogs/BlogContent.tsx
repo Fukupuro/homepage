@@ -38,7 +38,7 @@ export default function BlogContent() {
 				) : (
 					<div className="grid grid-cols-1 gap-4 py-6 md:grid-cols-3">
 						{blogs.map((blog: BlogItem) => (
-							<BlogCard key={blog.id ?? blog.link} blog={blog} />
+							<BlogCard key={blog.id} blog={blog} />
 						))}
 					</div>
 				)}

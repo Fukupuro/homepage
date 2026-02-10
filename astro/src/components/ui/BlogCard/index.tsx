@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import DefaultImage from "@/assets/images/default-image.jpeg";
 import type { BlogItem } from "@/types";
 import Tags from "../TagList/index.astro";
+import { PATH } from "@/constants";
 
 type Props = {
 	blog: BlogItem;
@@ -17,7 +18,7 @@ export default function BlogCard({ blog }: Props) {
 			/>
 			<div>
 				<p className="text-gray-500 text-sm">{dayjs(blog.published_at).format("YYYY-MM-DD")}</p>
-				<a href={blog.link} target="_blank" rel="noopener noreferrer">
+				<a href={`${PATH.BLOGS}/${blog.id}`} target="_blank" rel="noopener noreferrer">
 					<h3 className="line-clamp-3 font-bold text-gray-800 text-lg hover:underline">
 						{blog.title}
 					</h3>

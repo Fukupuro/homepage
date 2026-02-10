@@ -19,7 +19,9 @@
 		"astro": "^5.16.15",
 		"astro-icon": "^1.1.5",
 		"dayjs": "^1.11.19",
+		"highlight.js": "^11.11.1",
 		"marked": "^17.0.1",
+		"marked-highlight": "^2.2.3",
 		"preact": "^10.28.3",
 		"sharp": "^0.34.5",
 		"swr": "^2.4.0"

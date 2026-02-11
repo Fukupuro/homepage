@@ -3,7 +3,7 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 tags = [ "Ruby", "Rails", "JavaScript", "TypeScript", "React", "Astro", "Docker", "PostgreSQL", "CSS", "Git" ].map { |name|
-  [name, Tag.find_or_create_by!(name: name)]
+  [ name, Tag.find_or_create_by!(name: name) ]
 }.to_h
 
 blogs_data = [

@@ -1,5 +1,5 @@
-import { PATH } from "@/constants";
 import type { BlogTag } from "@/types";
+import { PATH } from "@/constants";
 
 export type FetchTagsResult = {
 	tags: BlogTag[];
@@ -10,7 +10,8 @@ export type FetchTagsResult = {
  * タグ一覧を取得する
  */
 export async function fetchTags(): Promise<FetchTagsResult> {
-	const res = await fetch(PATH.CMS.TAGS);
+	const url = `${PATH.CMS.TAGS}`;
+	const res = await fetch(url);
 	if (!res.ok) {
 		throw new Error(`Tags fetch failed: ${res.status} ${res.statusText}`);
 	}

@@ -4,7 +4,6 @@ import LoadingView from "./LoadingView";
 import NoDataView from "./NoDataView";
 import Pagination from "./Pagination";
 import SearchForm from "./SearchForm";
-import TagList from "./TagList";
 import { useBlogList } from "./useBlogList";
 
 export default function BlogContent() {
@@ -16,8 +15,6 @@ export default function BlogContent() {
 		data,
 		error,
 		isLoading,
-		allTags,
-		handleTagClick,
 	} = useBlogList();
 
 	if (error) {
@@ -29,14 +26,15 @@ export default function BlogContent() {
 	return (
 		<section id="blogs">
 			<SearchForm value={inputValue} onChange={setInputValue} onSubmit={handleSearchSubmit} />
-			<TagList tags={allTags?.tags} onTagClick={handleTagClick} />
-			<div className="py-6">
+			
+			<Pagination currentPage={currentPage} totalPages={totalPages} onChange={setPage} />
+			<div>
 				{isLoading ? (
 					<LoadingView />
 				) : blogs.length === 0 ? (
 					<NoDataView />
 				) : (
-					<div className="grid grid-cols-1 gap-4 py-6 md:grid-cols-3">
+					<div className="grid grid-cols-1 gap-4 py-3 md:grid-cols-3">
 						{blogs.map((blog: BlogItem) => (
 							<BlogCard key={blog.id} blog={blog} />
 						))}

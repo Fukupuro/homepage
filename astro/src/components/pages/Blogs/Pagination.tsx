@@ -72,7 +72,7 @@ export default function Pagination({ currentPage, totalPages, onChange }: Props)
 	return (
 		<nav
 			aria-label="ブログ一覧のページネーション"
-			className="flex items-center justify-center gap-2 py-4"
+			className="flex items-center justify-center gap-2 py-2"
 		>
 			<button
 				type="button"

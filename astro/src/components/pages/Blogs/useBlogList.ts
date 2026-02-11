@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import useSWR from "swr";
 import { type FetchBlogsResult, fetchBlogs } from "@/hooks/fetchBlogs";
-import { fetchTags, type FetchTagsResult } from "@/hooks/fetchTags";
 import { PATH } from "@/constants";
 
 /** 検索窓の空白を+に変換して q パラメータ用の文字列を生成 */
@@ -71,8 +70,6 @@ export function useBlogList() {
 		() => fetchBlogs({ q: query || undefined, page, limit: 9 }),
 	);
 
-	const { data: allTags } = useSWR<FetchTagsResult>(PATH.CMS.TAGS, () => fetchTags());
-
 	return {
 		inputValue,
 		setInputValue,
@@ -83,6 +80,5 @@ export function useBlogList() {
 		data,
 		error,
 		isLoading,
-		allTags,
 	};
 }

@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { PATH } from "@/constants";
 
 type Props = {
 	tags: string[];
@@ -14,7 +15,7 @@ export default function TagListClient({ tags }: Props) {
 			{tags.map((tag) => (
 				<a
 					key={tag}
-					href={`/blogs?q=tag:${encodeURIComponent(tag)}`}
+					href={`${PATH.BLOGS}?q=tag:${encodeURIComponent(tag)}`}
 					className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-gray-600 text-sm transition-colors hover:bg-gray-200"
 				>
 					<Icon icon="ri:hashtag" className="h-4 w-4 text-gray-800" />

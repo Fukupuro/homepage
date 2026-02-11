@@ -1,7 +1,5 @@
 module Api
-  class BlogsController < ApplicationController
-    skip_before_action :allow_browser
-    skip_forgery_protection
+  class BlogsController < ActionController::API
 
     def index
       blogs = Blog.includes(:tags).order(published_at: :desc)

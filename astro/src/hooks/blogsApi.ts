@@ -30,10 +30,6 @@ export function parseQuery(q: string): {
 	return result;
 }
 
-/** 検索APIレスポンスの型定義（Rails/CMS）
- * Rails 側の `/api/blogs` と同じ構造に揃えます。
- * { data: Blog[], meta: { current_page, total_pages, total_count, limit } }
- */
 export type SearchPost = {
 	id: number;
 	title: string;
@@ -75,12 +71,22 @@ function transformApiResponseToBlogItem(post: SearchPost, basePath: string = "/b
 }
 
 async function fetchBlogsFromApi(params: FetchBlogsParams): Promise<FetchBlogsResult> {
-	const { q, limit = 10, page = 1 } = params;
+	const { q, limit, page } = params;
+
+	const DEFAULT_LIMIT = 10;
+	const DEFAULT_PAGE = 1;
+
+	const parsedPage = Number(page ?? DEFAULT_PAGE);
+	const safePage = Math.max(1, Number.isNaN(parsedPage) ? DEFAULT_PAGE : parsedPage);
+
+	const parsedLimit = Number(limit ?? DEFAULT_LIMIT);
+	const safeLimit = Math.max(1, Number.isNaN(parsedLimit) ? DEFAULT_LIMIT : parsedLimit);
+
 	const searchParams = new URLSearchParams();
 
 	if (q) searchParams.set("q", q);
-	searchParams.set("limit", String(limit));
-	searchParams.set("page", String(page));
+	searchParams.set("limit", String(safeLimit));
+	searchParams.set("page", String(safePage));
 
 	const url = `${PATH.CMS.SEARCH}?${searchParams.toString()}`;
 	const res = await fetch(url);

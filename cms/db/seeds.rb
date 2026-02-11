@@ -171,9 +171,8 @@ blogs_data = [
 
 blogs_data.each do |data|
   blog_tags = data.delete(:tags)
-  blog = Blog.find_or_create_by!(title: data[:title]) do |b|
-    b.assign_attributes(data)
-  end
+  blog = Blog.find_or_initialize_by(title: data[:title])
+  blog.update!(data)
   blog.tags = blog_tags
 end
 

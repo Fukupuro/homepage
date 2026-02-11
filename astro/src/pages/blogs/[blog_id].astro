@@ -35,7 +35,7 @@ const modules = import.meta.glob<MarkdownModule>("../../contents/blogs/*.md", { 
 // blog_id と一致する Markdown を探す
 const entry = Object.entries(modules).find(([path]) => {
 	const filename = path.split("/").pop() ?? "";
-	return (filename.replace(/\.md$/, "") === blog_id);
+	return filename.replace(/\.md$/, "") === blog_id;
 });
 
 if (!entry) {

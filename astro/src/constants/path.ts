@@ -9,5 +9,5 @@ export const PATH = {
 		BLOGS: `${import.meta.env.CMS_URL}/api/blogs`,
 		SEARCH: `${import.meta.env.CMS_URL}/api/blogs/search`,
 		TAGS: `${import.meta.env.CMS_URL}/api/tags`,
-	}
+	},
 };

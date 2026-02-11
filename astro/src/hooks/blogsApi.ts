@@ -109,4 +109,3 @@ export async function fetchBlogs(params: FetchBlogsParams = {}): Promise<FetchBl
 		return { blogs: [], totalPages: 0, currentPage: 1 };
 	}
 }
-

@@ -6,8 +6,8 @@ import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 
 type Props = {
-	markdown: string;
-	className?: string;
+  markdown: string;
+  className?: string;
 };
 
 const props: Props = Astro.props;
@@ -15,57 +15,61 @@ const { markdown, className } = props;
 
 // シンタックスハイライト付きの Marked インスタンス
 const marked = new Marked(
-	markedHighlight({
-		langPrefix: "hljs language-",
-		highlight(code, lang) {
-			const pureLang = (lang || "").split(":")[0];
+  markedHighlight({
+    langPrefix: "hljs language-",
+    highlight(code, lang) {
+      const pureLang = (lang || "").split(":")[0];
 
-			// 数式ブロック（```math）は KaTeX で描画
-			if (pureLang === "math") {
-				try {
-					return katex.renderToString(code.trim(), {
-						displayMode: true,
-						throwOnError: false,
-						output: "html",
-					});
-				} catch {
-					return code;
-				}
-			}
+      // 数式ブロック（```math）は KaTeX で描画
+      if (pureLang === "math") {
+        try {
+          return katex.renderToString(code.trim(), {
+            displayMode: true,
+            throwOnError: false,
+            output: "html",
+          });
+        } catch {
+          return code;
+        }
+      }
 
-			if (pureLang && hljs.getLanguage(pureLang)) {
-				return hljs.highlight(code, { language: pureLang }).value;
-			}
+      if (pureLang && hljs.getLanguage(pureLang)) {
+        return hljs.highlight(code, { language: pureLang }).value;
+      }
 
-			// 未対応言語は自動判定にフォールバック
-			return hljs.highlightAuto(code).value;
-		},
-	}),
+      // 未対応言語は自動判定にフォールバック
+      return hljs.highlightAuto(code).value;
+    },
+  }),
 );
 
 // Markdown の見出しを Heading 相当の HTML に変換
 marked.use({
-	renderer: {
-		heading(token: Tokens.Heading & { level?: number }) {
-			const level = token.depth ?? token.level ?? 1;
-			const content = token.text ?? String(token.raw ?? "");
+  renderer: {
+    heading(token: Tokens.Heading & { level?: number }) {
+      const level = token.depth ?? token.level ?? 1;
+      const content = token.text ?? String(token.raw ?? "");
 
-			if (!level || level < 1 || level > 4) {
-				return `<h${level ?? 1}>${content}</h${level ?? 1}>`;
-			}
+      if (!level || level < 1 || level > 4) {
+        return `<h${level ?? 1}>${content}</h${level ?? 1}>`;
+      }
 
-			const hashes = "#".repeat(level);
+      const hashes = "#".repeat(level);
 
-			return `<h${level} class="markdown-heading"><span aria-hidden="true" class="heading-prefix">${hashes}</span>${content}</h${level}>`;
-		},
-	},
+      return `<h${level} class="markdown-heading"><span aria-hidden="true" class="heading-prefix">${hashes}</span>${content}</h${level}>`;
+    },
+  },
 });
 
 const parsedMarkdown = marked.parse(markdown);
 ---
+
 <div
   class={`markdown-body ${className ?? ""}`}
-  style="background-color: transparent !important;"
+  style="background-color: transparent;"
   set:html={parsedMarkdown}
 />
-<script type="module" is:inline  src="/src/components/ui/MarkdownContainer/codeEnhancer.ts" />
+<script
+  type="module"
+  is:inline
+  src="/src/components/ui/MarkdownContainer/codeEnhancer.ts"></script>

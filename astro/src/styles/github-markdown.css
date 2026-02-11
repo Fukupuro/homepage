@@ -113,7 +113,7 @@
 }
 
 .markdown-body [hidden] {
-  display: none !important;
+  display: none;
 }
 
 .markdown-body a {
@@ -423,7 +423,7 @@
 
 .markdown-body .octicon {
   display: inline-block;
-  overflow: visible !important;
+  overflow: visible;
   vertical-align: text-bottom;
   fill: currentColor;
 }
@@ -435,7 +435,7 @@
 }
 
 .markdown-body .mr-2 {
-  margin-right: var(--base-size-8, 8px) !important;
+  margin-right: var(--base-size-8, 8px);
 }
 
 .markdown-body::before {
@@ -450,11 +450,11 @@
 }
 
 .markdown-body>*:first-child {
-  margin-top: 0 !important;
+  margin-top: 0;
 }
 
 .markdown-body>*:last-child {
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 }
 
 .markdown-body a:not([href]) {
@@ -903,7 +903,7 @@
 }
 
 .markdown-body body:has(:modal) {
-  padding-right: var(--dialog-scrollgutter) !important;
+  padding-right: var(--dialog-scrollgutter);
 }
 
 .markdown-body .pl-c {
@@ -1045,7 +1045,7 @@
   min-width: 1ch;
   font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
   font-size: 1em;
-  font-style: normal !important;
+  font-style: normal;
   font-weight: var(--base-text-weight-normal, 400);
   line-height: 1;
   vertical-align: -0.075em;
@@ -1165,7 +1165,7 @@
 }
 
 .markdown-body>*:first-child>.heading-element:first-child {
-  margin-top: 0 !important;
+  margin-top: 0;
 }
 
 .markdown-body .highlight pre:has(+.zeroclipboard-container) {

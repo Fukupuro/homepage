@@ -1,6 +1,5 @@
 module Api
   class BlogsController < ActionController::API
-
     def index
       blogs = Blog.includes(:tags).order(published_at: :desc)
       render json: blogs.map { |blog|

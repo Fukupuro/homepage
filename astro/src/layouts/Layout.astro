@@ -16,7 +16,7 @@ const description =
 	props.description ||
 	"福プロ（福山大学学友会プログラミングサークル）のホームページです。プログラミングやゲーム、メタバースなどITに関する活動をしています。";
 const author = props.author || "福プロ";
-const thumbnail = props.thumbnail || "/favicon.svg";
+const thumbnail = props.thumbnail || `${Astro.url.origin}/favicon.svg`;
 const tags = ["福プロ", "福山大学", "プログラミングサークル", ...(props.tags || [])];
 ---
 
@@ -26,7 +26,7 @@ const tags = ["福プロ", "福山大学", "プログラミングサークル", 
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" href=/favicon.ico" />
 		<title>{title}</title>
 		<meta content={description} name="description">
 		<meta content={author} name="author" />
@@ -36,7 +36,7 @@ const tags = ["福プロ", "福山大学", "プログラミングサークル", 
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url.toString()} />
 		<meta property="og:image" content={thumbnail} />
-		<meta property="og:site_name" content={title} />
+		<meta property="og:site_name" content="福プロ | 福山大学学友会プログラミングサークル" />
 		<meta property="og:locale" content="ja_JP"  />
 		<meta name="keywords" content={tags.join(",")} />
 		

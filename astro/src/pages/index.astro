@@ -7,7 +7,7 @@ import Layout from "@/layouts/Layout.astro";
   title="福プロ | 福山大学学友会プログラミングサークル"
   description="福プロ（福山大学学友会プログラミングサークル）のホームページです。プログラミングやゲーム、メタバースなどITに関する活動をしています。"
   author="福プロ"
-	thumbnail="/favicon.svg"
+  thumbnail={`${Astro.url.origin}/favicon.svg`}
 	tags={["ホームページ"]}
 >
   <Home />

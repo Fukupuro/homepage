@@ -182,12 +182,61 @@ jobs:
       run:
         working-directory: astro
     env:
-      BACKEND_URL: http://localhost:3000
       FORM_URL: https://forms.gle/hogefugapiyo
       MAIL_ADDRESS: example@example.com
+      CMS_URL: http://localhost:3000
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+
+      - name: Install packages (for Rails / pg gem)
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential libpq-dev pkg-config
+        working-directory: .
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.1'
+          bundler-cache: true
+          working-directory: cms
+
+      - name: Prepare Rails database
+        working-directory: cms
+        env:
+          RAILS_ENV: development
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/cms_development
+        run: bin/rails db:prepare
+
+      - name: Start Rails server
+        working-directory: cms
+        env:
+          RAILS_ENV: development
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/cms_development
+        run: bin/rails server -p 3000 &
+        continue-on-error: false
+
+      - name: Wait for Rails API
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/api/blogs > /dev/null 2>&1; then
+              echo "Rails API is ready"
+              exit 0
+            fi
+            echo "Waiting for Rails... ($i/30)"
+            sleep 2
+          done
+          echo "Rails API did not become ready"
+          exit 1
+        working-directory: .
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -203,6 +252,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Fetch blogs
+        run: pnpm exec tsx src/scripts/fetchBlogsDuringBuild.ts
+        env:
+          CMS_URL: ${{ env.CMS_URL }}
 
       - name: Build
         run: pnpm run build

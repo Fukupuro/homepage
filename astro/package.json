@@ -25,7 +25,8 @@
 		"marked-highlight": "^2.2.3",
 		"preact": "^10.28.3",
 		"sharp": "^0.34.5",
-		"swr": "^2.4.0"
+		"swr": "^2.4.0",
+		"tsx": "^4.21.0"
 	},
 	"devDependencies": {
 		"@astrojs/tailwind": "^6.0.2",

@@ -15,23 +15,13 @@ type MarkdownModule = MarkdownInstance<{
 
 export async function getStaticPaths() {
 	// `src/contents/blogs/[id]/*.md` をすべてビルド対象にする
-	const modules = import.meta.glob("../../contents/blogs/*/*.md");
+	const modules = import.meta.glob("../../contents/blogs/*.md");
 
-	return Object.keys(modules)
-		.map((path) => {
-			// パス例: "../../contents/blogs/1/1.md" から "1" を取得
-			const match = path.match(/blogs\/(\d+)\//);
-			const id = match?.[1];
-
-			if (!id) return undefined;
-
-			return {
-				params: {
-					blog_id: id,
-				},
-			};
-		})
-		.filter(Boolean);
+	return Object.keys(modules).map((path) => {
+		const filename = path.split("/").pop() ?? "";
+		const blog_id = filename.replace(/\.md$/, "");
+		return { params: { blog_id } };
+	});
 }
 
 const blog_id = Astro.params?.blog_id;
@@ -40,13 +30,12 @@ if (!blog_id) {
 	throw new Error("Blog ID is required");
 }
 
-const modules = import.meta.glob<MarkdownModule>("../../contents/blogs/*/*.md", { eager: true });
+const modules = import.meta.glob<MarkdownModule>("../../contents/blogs/*.md", { eager: true });
 
 // blog_id と一致する Markdown を探す
 const entry = Object.entries(modules).find(([path]) => {
-	const match = path.match(/blogs\/(\d+)\//);
-	const id = match?.[1];
-	return id === blog_id;
+	const filename = path.split("/").pop() ?? "";
+	return (filename.replace(/\.md$/, "") === blog_id);
 });
 
 if (!entry) {

@@ -11,18 +11,5 @@ services:
     ports:
       - "5432:5432"
 
-  app:
-    build:
-      context: ./cms
-    depends_on:
-      - db
-    env_file:
-      - cms/.env.development
-    environment:
-      DATABASE_URL: postgres://cms:password@db:5432/cms_database
-      DB_HOST: db
-    ports:
-      - "3000:80"
-
 volumes:
   db-data:

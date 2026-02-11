@@ -6,8 +6,8 @@ export const PATH = {
 		GROUP_ACTIVITIES: "/blogs/group-activities/",
 	},
 	CMS: {
-		BLOGS: `${import.meta.env.CMS_URL}/api/blogs`,
-		SEARCH: `${import.meta.env.CMS_URL}/api/blogs/search`,
-		TAGS: `${import.meta.env.CMS_URL}/api/tags`,
+		BLOGS: `${import.meta.env.PUBLIC_CMS_URL}/api/blogs`,
+		SEARCH: `${import.meta.env.PUBLIC_CMS_URL}/api/blogs/search`,
+		TAGS: `${import.meta.env.PUBLIC_CMS_URL}/api/tags`,
 	},
 };

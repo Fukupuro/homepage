@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     resources :blogs, only: [ :index ] do
       get :search, on: :collection
     end
+    resources :tags, only: [ :index ]
   end
 
   # Defines the root path route ("/")

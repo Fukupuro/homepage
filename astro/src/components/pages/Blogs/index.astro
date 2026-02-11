@@ -1,10 +1,23 @@
 ---
 import Container from "@/components/ui/Container/index.astro";
 import Heading from "@/components/ui/Heading/index.astro";
+import { fetchTags } from "@/hooks/fetchTags";
+import type { BlogTag } from "@/types";
 import BlogContent from "./BlogContent";
+import TagListStatic from "./TagListStatic.astro";
+
+let staticTags: BlogTag[] = [];
+
+try {
+	const data = await fetchTags();
+	staticTags = data.tags ?? [];
+} catch {
+	staticTags = [];
+}
 ---
 
 <Container>
   <Heading as="h1">記事一覧</Heading>
   <BlogContent client:only="preact" />
+  <TagListStatic tags={staticTags} />
 </Container>

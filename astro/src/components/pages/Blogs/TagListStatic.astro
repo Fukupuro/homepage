@@ -1,0 +1,32 @@
+---
+import Heading from "@/components/ui/Heading/index.astro";
+import type { BlogTag } from "@/types";
+
+type Props = {
+	tags: BlogTag[];
+};
+
+const { tags } = Astro.props;
+---
+
+{tags.length > 0 && (
+  <section class="mt-4">
+    <Heading as="h2">タグ一覧</Heading> 
+      <div class="mt-2 flex flex-wrap gap-2">
+        {tags.map((tag) => {
+          const qs = new URLSearchParams({ q: `tag:${tag.name}` }).toString();
+          return (
+            <a
+              href={`/blogs?${qs}`}
+              class="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-gray-600 text-sm transition-colors hover:bg-gray-200"
+            >
+              <span aria-hidden="true" class="select-none">#</span>
+              <span>{tag.name}</span>
+              <span class="text-gray-400 text-xs">({tag.count})</span>
+            </a>
+          );
+        })}
+      </div>
+  </section>
+)}
+

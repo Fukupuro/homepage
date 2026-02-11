@@ -1,6 +1,7 @@
 ---
 import Image from "astro/components/Image.astro";
 import { Icon } from "astro-icon/components";
+import dayjs from "dayjs";
 import Heading from "@/components/ui/Heading/index.astro";
 import MarkdownContainer from "@/components/ui/MarkdownContainer/index.astro";
 import Tags from "@/components/ui/TagList/index.astro";
@@ -13,58 +14,79 @@ type Props = {
 
 const { blog } = Astro.props as Props;
 
-const { title, description, thumbnail, tags, content } = blog;
+const { title, description, thumbnail, tags, content, published_at, author } = blog;
 ---
 
-{thumbnail && <Image src={thumbnail} alt={title} width={100} height={100} class="thumbnail" />}
+{
+	thumbnail && (
+		<Image
+			src={thumbnail}
+			alt={title}
+			width={100}
+			height={100}
+			class="thumbnail"
+		/>
+	)
+}
 <article class="blog-article">
-  <div class="blog-header">
-    <nav>
-      <a href={PATH.BLOGS} class="back-link">
-        <Icon name="ri:arrow-left-s-line" />
-        <span>戻る</span>
-      </a>
-    </nav>
-    <Heading as="h1">{title}</Heading>
-    {description && <p class="description">{description}</p>}
-    <Tags tags={tags} />
-  </div>
+	<div class="blog-header">
+		<nav>
+			<a href={PATH.BLOGS} class="back-link">
+				<Icon name="ri:arrow-left-s-line" />
+				<span>戻る</span>
+			</a>
+		</nav>
+		<Heading as="h1">{title}</Heading>
+		<div class="flex items-center gap-2 justify-between text-base text-gray-500">
+			<p>
+				{dayjs(published_at).format("YYYY-MM-DD")}
+			</p>
+			<a
+				href={`${PATH.BLOGS}?q=author:${encodeURIComponent(author)}`}
+				class="hover:underline"
+			>
+				{author}
+			</a>
+		</div>
+		{description && <p class="description">{description}</p>}
+		<Tags tags={tags} />
+	</div>
 
-  <MarkdownContainer markdown={content} />
+	<MarkdownContainer markdown={content} />
 </article>
 
 <style>
-  .blog-article {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 1rem 2rem;
-    line-height: 1.8;
-  }
+	.blog-article {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 1rem 2rem;
+		line-height: 1.8;
+	}
 
-  .blog-header {
-    margin-bottom: 2rem;
-  }
+	.blog-header {
+		margin-bottom: 2rem;
+	}
 
-  .back-link {
-    @apply flex items-center gap-2 text-gray-500 text-base hover:text-gray-800 w-fit;
-  }
+	.back-link {
+		@apply flex items-center gap-2 text-gray-500 text-base hover:text-gray-800 w-fit;
+	}
 
-  .blog-article h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-  }
+	.blog-article h1 {
+		font-size: 2rem;
+		font-weight: 700;
+		margin-bottom: 0.75rem;
+	}
 
-  .blog-article .description {
-    color: #666;
-    margin-bottom: 1.5rem;
-  }
+	.blog-article .description {
+		color: #666;
+		margin-bottom: 1.5rem;
+	}
 
-  .thumbnail {
-    display: block;
-    width: 100%;
-    max-height: 180px;
-    object-fit: cover;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  }
+	.thumbnail {
+		display: block;
+		width: 100%;
+		max-height: 180px;
+		object-fit: cover;
+		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+	}
 </style>

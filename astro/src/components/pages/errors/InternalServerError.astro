@@ -1,0 +1,35 @@
+---
+import { Icon } from "astro-icon/components";
+import Container from "@/components/ui/Container/index.astro";
+import Heading from "@/components/ui/Heading/index.astro";
+import { PATH } from "@/constants";
+---
+
+<Container>
+	<div class="flex items-center gap-2 text-gray-800">
+    <Icon name="ri:error-warning-line" size={48} />
+    <h1 class="text-4xl font-bold">500 Internal Server Error</h1>
+	</div>
+
+  <Heading as="h2" class="mt-4">サーバーでエラーが発生しました</Heading>
+
+  <p>サーバーでエラーが発生しました。しばらく経ってから再度お試しください。</p>
+  <a href={PATH.HOME} class="error-link">
+    <Icon name="ri:external-link-fill" size={24} />
+    ホームに戻る
+  </a>
+</Container>
+
+<style>
+  .error-link {
+    @apply relative flex items-center gap-2 text-blue-500 mt-4 w-fit;
+  }
+
+  .error-link:hover {
+    @apply text-blue-600;
+
+    &::after {
+      @apply absolute bottom-0 left-0 content-[''] block w-full h-[2px] bg-blue-600;
+    }
+  }
+</style>

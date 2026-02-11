@@ -9,9 +9,10 @@ class Blog < ApplicationRecord
   validates :description, presence: true
 
   scope :search_by_keyword, ->(keyword) {
+    sanitized = "%#{sanitize_sql_like(keyword)}%"
     left_joins(:tags).where(
-      "blogs.title LIKE ? OR blogs.content LIKE ? OR tags.name LIKE ?",
-      "%#{keyword}%", "%#{keyword}%", "%#{keyword}%"
+      "blogs.title LIKE ? OR blogs.content LIKE ? OR tags.name LIKE ? OR blogs.author LIKE ? OR blogs.description LIKE ?",
+      sanitized, sanitized, sanitized, sanitized, sanitized
     ).distinct
   }
 
@@ -20,7 +21,7 @@ class Blog < ApplicationRecord
   }
 
   scope :search_by_author, ->(author) {
-    where("blogs.author LIKE ?", "%#{author}%")
+    where("blogs.author LIKE ?", "%#{sanitize_sql_like(author)}%")
   }
 
   def header_image_url

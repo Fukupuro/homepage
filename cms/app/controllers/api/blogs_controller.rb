@@ -1,15 +1,19 @@
 module Api
   class BlogsController < ActionController::API
+    DEFAULT_LIMIT = 10
+    MAX_LIMIT = 100
+    MAX_SEARCH_TERMS = 10
+
     def index
-      blogs = Blog.includes(:tags).order(published_at: :desc)
-      render json: serialize_blogs(blogs)
+      blogs = Blog.includes(:tags, header_image_attachment: :blob).order(published_at: :desc)
+      render json: paginate(blogs)
     end
 
     def search
-      blogs = Blog.includes(:tags).order(published_at: :desc)
+      blogs = Blog.includes(:tags, header_image_attachment: :blob).order(published_at: :desc)
 
       if params[:q].present?
-        params[:q].split.each do |term|
+        params[:q].split.first(MAX_SEARCH_TERMS).each do |term|
           case term
           when /\Atag:(.+)/
             blogs = blogs.search_by_tag($1)
@@ -21,10 +25,40 @@ module Api
         end
       end
 
-      render json: serialize_blogs(blogs)
+      render json: paginate(blogs)
     end
 
     private
+
+    def paginate(scope)
+      total_count = scope.count
+
+      if params[:page].present? || params[:limit].present?
+        limit = (params[:limit] || DEFAULT_LIMIT).to_i.clamp(1, MAX_LIMIT)
+        page = [ params[:page].to_i, 1 ].max
+        offset = (page - 1) * limit
+
+        {
+          data: serialize_blogs(scope.limit(limit).offset(offset)),
+          meta: {
+            current_page: page,
+            total_pages: (total_count.to_f / limit).ceil,
+            total_count: total_count,
+            limit: limit
+          }
+        }
+      else
+        {
+          data: serialize_blogs(scope),
+          meta: {
+            current_page: 1,
+            total_pages: 1,
+            total_count: total_count,
+            limit: total_count
+          }
+        }
+      end
+    end
 
     def serialize_blogs(blogs)
       blogs.map { |blog|

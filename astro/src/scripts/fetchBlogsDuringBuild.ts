@@ -53,7 +53,9 @@ export async function fetchBlogsDuringBuild() {
 		throw new Error("CMS_URL is not set");
 	}
 
-	const res = await fetch(`${cmsUrl}/api/blogs`);
+	const res = await fetch(`${cmsUrl}/api/blogs`, {
+		signal: AbortSignal.timeout(10_000),
+	});
 	if (!res.ok) {
 		throw new Error(`Failed to fetch blogs: ${res.status} ${res.statusText}`);
 	}

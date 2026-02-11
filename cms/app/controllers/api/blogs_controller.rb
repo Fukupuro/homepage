@@ -2,6 +2,7 @@ module Api
   class BlogsController < ActionController::API
     DEFAULT_LIMIT = 10
     MAX_LIMIT = 100
+    MAX_SEARCH_TERMS = 10
 
     def index
       blogs = Blog.includes(:tags, header_image_attachment: :blob).order(published_at: :desc)
@@ -9,10 +10,10 @@ module Api
     end
 
     def search
-      blogs = Blog.includes(:tags).order(published_at: :desc)
+      blogs = Blog.includes(:tags, header_image_attachment: :blob).order(published_at: :desc)
 
       if params[:q].present?
-        params[:q].split.each do |term|
+        params[:q].split.first(MAX_SEARCH_TERMS).each do |term|
           case term
           when /\Atag:(.+)/
             blogs = blogs.search_by_tag($1)
@@ -30,7 +31,7 @@ module Api
     private
 
     def paginate(scope)
-      limit = [ (params[:limit] || DEFAULT_LIMIT).to_i, MAX_LIMIT ].min
+      limit = (params[:limit] || DEFAULT_LIMIT).to_i.clamp(1, MAX_LIMIT)
       page = [ params[:page].to_i, 1 ].max
       offset = (page - 1) * limit
       total_count = scope.count

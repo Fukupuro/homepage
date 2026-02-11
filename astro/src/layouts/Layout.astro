@@ -12,6 +12,11 @@ import "@splidejs/splide/css/skyblue";
 
 const props = Astro.props;
 const title = props.title || "福プロ | 福山大学学友会プログラミングサークル";
+const description = props.description || "福プロ（福山大学学友会プログラミングサークル）のホームページです。プログラミングやゲーム、メタバースなどITに関する活動をしています。";
+const author = props.author || "福プロ";
+const thumbnail = props.thumbnail || "/favicon.svg";
+const tags = ["福プロ", "福山大学", "プログラミングサークル", ...props.tags];
+
 ---
 
 <!doctype html>
@@ -21,8 +26,21 @@ const title = props.title || "福プロ | 福山大学学友会プログラミ�
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<meta content={description} name="description">
+		<meta content={author} name="author" />
+
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url.toString()} />
+		<meta property="og:image" content={thumbnail} />
+		<meta property="og:site_name" content={title} />
+		<meta property="og:locale" content="ja_JP"  />
+		<meta name="keywords" content={tags.join(",")} />
+		
+		<meta name="generator" content={Astro.generator} />
+
 	</head>
 	<body>
 		<img id="background" src={background.src} alt="" fetchpriority="high" />

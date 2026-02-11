@@ -97,9 +97,14 @@
   margin-right: 0.5rem; /* Tailwind mr-2 */
 }
 
-/* Tailwind Preflight の list-style: none を打ち消し、リスト・番号付きリストを正しく描画 */
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
 .markdown-body ul {
   list-style-type: disc;
+  list-style-position: inside;
 }
 
 .markdown-body ol {
@@ -109,5 +114,15 @@
 
 .markdown-body li {
   display: list-item;
+}
+
+.markdown-body li > p {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li:has(input[type="checkbox"]) {
+  list-style: none;
 }
 

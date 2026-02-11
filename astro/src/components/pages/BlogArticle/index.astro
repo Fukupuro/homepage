@@ -4,6 +4,8 @@ import Tags from "@/components/ui/TagList/index.astro";
 import type { BlogItem } from "@/types";
 import MarkdownContainer from "@/components/ui/MarkdownContainer/index.astro";
 import Image from "astro/components/Image.astro";
+import { PATH } from "@/constants";
+import { Icon } from "astro-icon/components";
 
 type Props = {
   blog: BlogItem;
@@ -17,6 +19,12 @@ const { title, description, thumbnail, tags, content } = blog;
 {thumbnail && <Image src={thumbnail} alt={title} width={100} height={100} class="thumbnail" />}
 <article class="blog-article">
   <div class="blog-header">
+    <nav>
+      <a href={PATH.BLOGS} class="back-link">
+        <Icon name="ri:arrow-left-s-line" />
+        <span>戻る</span>
+      </a>
+    </nav>
     <Heading as="h1">{title}</Heading>
     {description && <p class="description">{description}</p>}
     <Tags tags={tags} />
@@ -29,12 +37,16 @@ const { title, description, thumbnail, tags, content } = blog;
   .blog-article {
     max-width: 720px;
     margin: 0 auto;
-    padding: 2rem 1.25rem 3rem;
+    padding: 1rem 2rem;
     line-height: 1.8;
   }
 
   .blog-header {
     margin-bottom: 2rem;
+  }
+
+  .back-link {
+    @apply flex items-center gap-2 text-gray-500 text-base hover:text-gray-800 w-fit;
   }
 
   .blog-article h1 {

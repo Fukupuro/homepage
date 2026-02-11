@@ -42,11 +42,6 @@ if (!blog_id) {
 
 const modules = import.meta.glob<MarkdownModule>("../../contents/blogs/*/*.md", { eager: true });
 
-const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-	"/src/assets/images/blogs/*/*.{jpg,png}",
-	{ eager: true },
-);
-
 // blog_id と一致する Markdown を探す
 const entry = Object.entries(modules).find(([path]) => {
 	const match = path.match(/blogs\/(\d+)\//);

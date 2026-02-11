@@ -8,6 +8,21 @@ class Blog < ApplicationRecord
   validates :title, presence: true
   validates :description, presence: true
 
+  scope :search_by_keyword, ->(keyword) {
+    left_joins(:tags).where(
+      'blogs.title LIKE ? OR blogs.content LIKE ? OR tags.name LIKE ?',
+      "%#{keyword}%", "%#{keyword}%", "%#{keyword}%"
+    ).distinct
+  }
+
+  scope :search_by_tag, ->(tag_name) {
+    where(id: Blog.joins(:tags).where(tags: { name: tag_name }).select(:id))
+  }
+
+  scope :search_by_author, ->(author) {
+    where('blogs.author LIKE ?', "%#{author}%")
+  }
+
   def header_image_url
     if header_image.attached?
       Rails.application.routes.url_helpers.rails_blob_url(header_image, only_path: true)

@@ -3,6 +3,7 @@ module Api
     def index
       tags_with_count = Tag.all.map do |tag|
         {
+          id: tag.id,
           name: tag.name,
           count: tag.blogs.count
         }

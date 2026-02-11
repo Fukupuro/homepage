@@ -1,0 +1,34 @@
+<h1>ブログ管理</h1>
+
+<%= link_to "新規作成", new_admin_blog_path %>
+
+<% if notice.present? %>
+  <p style="color: green;"><%= notice %></p>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th>著者</th>
+      <th>タグ</th>
+      <th>公開日</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @blogs.each do |blog| %>
+      <tr>
+        <td><%= blog.title %></td>
+        <td><%= blog.author %></td>
+        <td><%= blog.tags.map(&:name).join(", ") %></td>
+        <td><%= blog.published_at&.strftime("%Y-%m-%d %H:%M") %></td>
+        <td>
+          <%= link_to "詳細", admin_blog_path(blog) %>
+          <%= link_to "編集", edit_admin_blog_path(blog) %>
+          <%= link_to "削除", admin_blog_path(blog), data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

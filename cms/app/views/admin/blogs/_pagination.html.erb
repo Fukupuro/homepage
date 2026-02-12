@@ -1,0 +1,33 @@
+<% return if total_pages <= 1 %>
+
+<nav aria-label="ページネーション" class="flex items-center justify-center gap-3 pt-14 pb-4">
+  <%# 前へ %>
+  <% if current_page > 1 %>
+    <%= link_to "前へ", admin_blogs_path(page: current_page - 1),
+          class: "rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm text-gray-700 hover:bg-gray-100" %>
+  <% else %>
+    <span class="rounded-lg border border-gray-200 bg-gray-50 px-5 py-2.5 text-sm text-gray-300 cursor-not-allowed">前へ</span>
+  <% end %>
+
+  <%# ページ番号 %>
+  <% page_numbers_for(current_page, total_pages).each do |item| %>
+    <% if item == :ellipsis %>
+      <span class="px-3 text-sm text-gray-400">…</span>
+    <% elsif item == current_page %>
+      <span class="rounded-lg border border-blue-600 bg-blue-600 px-5 py-2.5 text-sm font-medium text-white">
+        <%= item %>
+      </span>
+    <% else %>
+      <%= link_to item, admin_blogs_path(page: item),
+            class: "rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm text-gray-700 hover:bg-gray-100" %>
+    <% end %>
+  <% end %>
+
+  <%# 次へ %>
+  <% if current_page < total_pages %>
+    <%= link_to "次へ", admin_blogs_path(page: current_page + 1),
+          class: "rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm text-gray-700 hover:bg-gray-100" %>
+  <% else %>
+    <span class="rounded-lg border border-gray-200 bg-gray-50 px-5 py-2.5 text-sm text-gray-300 cursor-not-allowed">次へ</span>
+  <% end %>
+</nav>

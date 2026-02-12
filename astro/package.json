@@ -22,7 +22,7 @@
 		"dayjs": "^1.11.19",
 		"highlight.js": "^11.11.1",
 		"katex": "^0.16.28",
-		"marked": "^16.0.0",
+		"marked": "^17.0.2",
 		"marked-highlight": "^2.2.3",
 		"preact": "^10.28.3",
 		"sharp": "^0.34.5",

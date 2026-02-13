@@ -43,7 +43,7 @@
   --bgColor-attention-muted: #fff8c5;
   --borderColor-default: #d1d9e0;
   --borderColor-muted: #d1d9e0b3;
-  --fontStack-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+  --fontStack-monospace: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas",
     "Liberation Mono", monospace;
 
   color: var(--fgColor-default);

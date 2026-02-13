@@ -27,6 +27,7 @@ export default function BlogCard({ blog }: Props) {
 				<div className={blogCardStyles.tags}>
 					{blog.tags.map((tag) => (
 						<a
+							key={tag}
 							className={blogCardStyles.tag}
 							href={`${PATH.BLOGS}?q=tag:${encodeURIComponent(tag)}`}
 						>

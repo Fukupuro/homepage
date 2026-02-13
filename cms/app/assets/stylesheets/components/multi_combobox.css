@@ -49,14 +49,14 @@
 
 .multi-combobox__input-area--focused {
   border-color: var(--mc-color-border-focus);
-  box-shadow: 0 0 0 2px rgba(0, 119, 194, 0.2);
+  box-shadow: 0 0 0 2px rgb(0 119 194 / 0.2);
 }
 
 .multi-combobox--error .multi-combobox__input-area {
   border-color: var(--mc-color-border-error);
 }
 .multi-combobox--error .multi-combobox__input-area--focused {
-  box-shadow: 0 0 0 2px rgba(224, 30, 90, 0.2);
+  box-shadow: 0 0 0 2px rgb(224 30 90 / 0.2);
 }
 
 .multi-combobox--disabled .multi-combobox__input-area {
@@ -113,7 +113,7 @@
 }
 
 .multi-combobox__tag-remove:hover {
-  background-color: rgba(0, 119, 194, 0.15);
+  background-color: rgb(0 119 194 / 0.15);
 }
 
 /* --- Text input --- */
@@ -182,7 +182,7 @@
   border: 1px solid var(--mc-color-border);
   border-radius: var(--mc-radius);
   background-color: var(--mc-color-bg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
   z-index: 50;
   max-height: 240px;
   overflow-y: auto;

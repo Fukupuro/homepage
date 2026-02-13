@@ -115,7 +115,8 @@ export default class extends Controller {
   // --- Private methods ---
 
   _selectItem(item) {
-    if (this.selectedValue.some(i => i.value === item.value)) return
+    const normalizedValue = String(item.value) // 値を文字列に正規化
+    if (this.selectedValue.some(i => String(i.value) === normalizedValue)) return
 
     this.selectedValue = [...this.selectedValue, item]
     this.inputTarget.value = ""
@@ -127,7 +128,8 @@ export default class extends Controller {
   }
 
   _removeItem(item) {
-    this.selectedValue = this.selectedValue.filter(i => i.value !== item.value)
+    const normalizedValue = String(item.value) // 値を文字列に正規化
+    this.selectedValue = this.selectedValue.filter(i => String(i.value) !== normalizedValue)
     this._renderTags()
     this._renderHiddenInputs()
     this._filterAndRender(this.inputTarget.value)
@@ -135,8 +137,10 @@ export default class extends Controller {
 
   _addNewItem(text) {
     const newItem = { label: text, value: text }
+    const normalizedValue = String(newItem.value) // 値を文字列に正規化
+
     // Add to items list if not already present
-    if (!this.itemsValue.some(i => i.value === text)) {
+    if (!this.itemsValue.some(i => String(i.value) === normalizedValue)) {
       this.itemsValue = [...this.itemsValue, newItem]
     }
     this._selectItem(newItem)

@@ -6,6 +6,8 @@ class Blog < ApplicationRecord
   has_many_attached :content_images
 
   validates :title, presence: true
+  validates :content, presence: true
+  validates :author, presence: true
   validates :description, presence: true
 
   scope :search_by_keyword, ->(keyword) {

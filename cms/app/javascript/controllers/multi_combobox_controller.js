@@ -199,7 +199,8 @@ export default class extends Controller {
   }
 
   _filterAndRender(query) {
-    const q = (query || "").toLowerCase()
+    const rawQuery = (query || "")
+    const q = rawQuery.toLowerCase()
     const selectedValues = new Set(this.selectedValue.map(i => i.value))
 
     const filtered = this.itemsValue.filter(item =>
@@ -207,7 +208,7 @@ export default class extends Controller {
       item.label.toLowerCase().includes(q)
     )
 
-    this._renderList(filtered, q)
+    this._renderList(filtered, rawQuery.trim())
   }
 
   _renderList(items, query) {

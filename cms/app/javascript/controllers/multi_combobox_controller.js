@@ -208,6 +208,8 @@ export default class extends Controller {
       item.label.toLowerCase().includes(q)
     )
 
+    // リスト再描画前にアクティブインデックスをリセット
+    this._activeIndex = -1
     this._renderList(filtered, rawQuery.trim())
   }
 
@@ -216,6 +218,8 @@ export default class extends Controller {
     list.innerHTML = ""
     list.setAttribute("role", "listbox")
     list.id = list.id || `${this.nameValue}-listbox`
+
+    this.inputTarget.removeAttribute("aria-activedescendant")
 
     if (this.loadingValue) {
       const li = document.createElement("li")

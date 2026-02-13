@@ -102,7 +102,7 @@ export default class extends Controller {
 
   removeTag(e) {
     const value = e.currentTarget.dataset.value
-    const item = this.selectedValue.find(i => i.value === value)
+    const item = this.selectedValue.find(i => String(i.value) === value)
     if (item) this._removeItem(item)
   }
 

@@ -76,8 +76,8 @@ resource "sakuracloud_packet_filter_rules" "rails" {
 # サーバーの定義
 resource "sakuracloud_server" "rails_app" {
   name   = "rails-server"
-  core   = 1
-  memory = 2
+  core   = 4
+  memory = 8
   disks  = [sakuracloud_disk.boot.id]
 
   network_interface {
@@ -142,9 +142,10 @@ resource "null_resource" "deploy_app" {
   depends_on = [null_resource.deploy_setup, local_file.env_production]
 
   triggers = {
-    repo  = var.git_repo_url
-    ref   = var.git_ref
-    env   = local_file.env_production.content_sha256
+    repo    = var.git_repo_url
+    ref     = var.git_ref
+    env     = local_file.env_production.content_sha256
+    deploy  = var.deploy_trigger
   }
 
   connection {

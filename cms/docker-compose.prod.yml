@@ -30,7 +30,7 @@ services:
       - .env.production
     environment:
       RAILS_ENV: production
-      PORT: "80"
+      PORT: "3000"
       CMS_DATABASE_HOST: db
       CMS_DATABASE_USER: cms
       CMS_DATABASE_NAME: cms_production

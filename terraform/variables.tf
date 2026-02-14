@@ -1,10 +1,12 @@
 variable "sakuracloud_token" {
   type        = string
+  sensitive   = true
   description = "Sakura Cloud API トークン"
 }
 
 variable "sakuracloud_secret" {
   type        = string
+  sensitive   = true
   description = "Sakura Cloud API シークレット"
 }
 

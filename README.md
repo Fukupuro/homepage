@@ -35,6 +35,7 @@ docker compose up --build
 cd cms
 bundle install
 bin/rails credentials:edit
+bin/dev
 ```
 
 詳しい設定やコマンドは、必要になったときに追記してください。

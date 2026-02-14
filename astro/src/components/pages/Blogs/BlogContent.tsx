@@ -7,13 +7,10 @@ export default function BlogContent() {
 	const { inputValue, setInputValue, setPage, handleSearchSubmit, data, error, isLoading } =
 		useBlogList();
 
-	if (error) {
-		return <div>Error: {error.message}</div>;
-	}
-
 	return (
 		<section id="blogs">
 			<SearchForm value={inputValue} onChange={setInputValue} onSubmit={handleSearchSubmit} />
+			{error && <div>Error: {error.message}</div>}
 			{isLoading && !data && <LoadingView />}
 			{data?.status === "success" && (
 				<BlogListWithPagination
@@ -24,7 +21,6 @@ export default function BlogContent() {
 					onPageChange={setPage}
 				/>
 			)}
-			{data?.status === "failed" && <div>Error: {data.error.message}</div>}
 		</section>
 	);
 }

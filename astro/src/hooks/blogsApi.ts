@@ -58,11 +58,6 @@ export type FetchBlogsResult = {
 	currentPage: number;
 };
 
-export type FailedToFetchBlogsResult = {
-	status: "failed";
-	error: Error;
-};
-
 function transformApiResponseToBlogItem(post: SearchPost, _basePath: string = "/blogs"): BlogItem {
 	return {
 		id: String(post.id),
@@ -111,14 +106,12 @@ async function fetchBlogsFromApi(params: FetchBlogsParams): Promise<FetchBlogsRe
 }
 
 /**
- * 記事検索
+ * 記事検索。成功時は FetchBlogsResult を返し、失敗時は Error を throw する。
  */
-export async function fetchBlogs(
-	params: FetchBlogsParams = {},
-): Promise<FetchBlogsResult | FailedToFetchBlogsResult> {
+export async function fetchBlogs(params: FetchBlogsParams = {}): Promise<FetchBlogsResult> {
 	try {
 		return await fetchBlogsFromApi(params);
-	} catch {
-		return { status: "failed", error: new Error("Failed to fetch blogs") };
+	} catch (e) {
+		throw e instanceof Error ? e : new Error("Failed to fetch blogs");
 	}
 }

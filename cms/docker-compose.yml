@@ -3,15 +3,15 @@ services:
     image: postgres:16
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-cms}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-cms_database}
+      POSTGRES_USER: cms
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cms_database
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cms} -d ${POSTGRES_DB:-cms_database}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -29,9 +29,10 @@ services:
     environment:
       RAILS_ENV: development
       PORT: "3000"
-      DB_HOST: db
-      DB_USERNAME: ${POSTGRES_USER:-cms}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      CMS_DATABASE_HOST: db
+      CMS_DATABASE_USER: cms
+      CMS_DATABASE_PASSWORD: password
+      CMS_DATABASE_NAME: cms_database
     volumes:
       - .:/rails
       - cms-bundle:/usr/local/bundle

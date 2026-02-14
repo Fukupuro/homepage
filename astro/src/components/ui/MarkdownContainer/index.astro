@@ -64,9 +64,7 @@ marked.use({
 			token: Tokens.Link,
 		) {
 			const href = token.href ?? "";
-			const title = token.title
-				? ` title="${String(token.title).replace(/"/g, "&quot;")}"`
-				: "";
+			const title = token.title ? ` title="${String(token.title).replace(/"/g, "&quot;")}"` : "";
 			const body = this.parser.parseInline(token.tokens);
 			return `<a href="${href.replace(/"/g, "&quot;")}"${title} target="_blank" rel="noopener noreferrer">${body}</a>`;
 		},

@@ -1,9 +1,9 @@
 ---
 import type { MarkdownInstance } from "astro";
 import BlogArticle from "@/components/pages/BlogArticle/index.astro";
+import { PATH } from "@/constants";
 import Layout from "@/layouts/Layout.astro";
 import type { BlogItem } from "@/types";
-import { PATH } from "@/constants";
 
 type MarkdownModule = MarkdownInstance<{
 	title: string;

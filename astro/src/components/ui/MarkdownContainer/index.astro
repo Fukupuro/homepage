@@ -43,7 +43,6 @@ const marked = new Marked(
 	}),
 );
 
-// Markdown の見出しを Heading 相当の HTML に変換
 marked.use({
 	renderer: {
 		heading(token: Tokens.Heading & { level?: number }) {
@@ -57,6 +56,12 @@ marked.use({
 			const hashes = "#".repeat(level);
 
 			return `<h${level} class="markdown-heading"><span aria-hidden="true" class="heading-prefix">${hashes}</span>${content}</h${level}>`;
+		},
+		link(this: { parser: { parseInline: (tokens: import("marked").Token[]) => string } }, token: Tokens.Link) {
+			const href = token.href ?? "";
+			const title = token.title ? ` title="${String(token.title).replace(/"/g, "&quot;")}"` : "";
+			const body = this.parser.parseInline(token.tokens);
+			return `<a href="${href.replace(/"/g, "&quot;")}"${title} target="_blank" rel="noopener noreferrer">${body}</a>`;
 		},
 	},
 });

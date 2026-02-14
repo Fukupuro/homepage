@@ -1,0 +1,25 @@
+name: Deploy Rails
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cms/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cms
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.1"
+          bundler-cache: true
+          working-directory: cms
+      - run: bundle install
+      - name: Deploy to production
+        run: echo "Todo. Deploy to production"

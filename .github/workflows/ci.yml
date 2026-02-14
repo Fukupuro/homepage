@@ -182,8 +182,6 @@ jobs:
       run:
         working-directory: astro
     env:
-      FORM_URL: https://forms.gle/hogefugapiyo
-      MAIL_ADDRESS: example@example.com
       PUBLIC_CMS_URL: http://localhost:3000
     services:
       postgres:

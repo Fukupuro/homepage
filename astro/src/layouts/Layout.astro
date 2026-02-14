@@ -1,6 +1,7 @@
 ---
 import Footer from "@/components/layout/Footer/index.astro";
 import Header from "@/components/layout/Header/index.astro";
+import { PATH } from "@/constants";
 import background from "../assets/background.svg";
 
 import "@/styles/global.css";
@@ -26,7 +27,12 @@ const description =
 	props.description ||
 	"福プロ（福山大学学友会プログラミングサークル）のホームページです。プログラミングやゲーム、メタバースなどITに関する活動をしています。";
 const author = props.author || "福プロ";
-const thumbnail = props.thumbnail || `${Astro.url.origin}/favicon.svg`;
+const thumbnailRaw = props.thumbnail || PATH.IMAGES("favicon.svg");
+const siteOrigin = Astro.site ?? Astro.url.origin;
+const thumbnail =
+	thumbnailRaw.startsWith("http://") || thumbnailRaw.startsWith("https://")
+		? thumbnailRaw
+		: new URL(thumbnailRaw, siteOrigin).href;
 const tags = ["福プロ", "福山大学", "プログラミングサークル", ...(props.tags || [])];
 const noindex = props.noindex ?? false;
 ---
@@ -36,8 +42,8 @@ const noindex = props.noindex ?? false;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/svg+xml" href={PATH.IMAGES("favicon.svg")} />
+		<link rel="icon" href={PATH.IMAGES("favicon.ico")} />
 		<title>{title}</title>
 		<meta content={description} name="description">
 		<meta content={author} name="author" />

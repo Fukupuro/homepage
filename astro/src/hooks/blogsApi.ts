@@ -58,7 +58,10 @@ export type FetchBlogsResult = {
 	currentPage: number;
 };
 
-function transformApiResponseToBlogItem(post: SearchPost, _basePath: string = "/blogs"): BlogItem {
+function transformApiResponseToBlogItem(
+	post: SearchPost,
+	_basePath: string = PATH.BLOGS,
+): BlogItem {
 	return {
 		id: String(post.id),
 		title: post.title,

@@ -1,5 +1,6 @@
 ---
 import Blogs from "@/components/pages/Blogs/index.astro";
+import { PATH } from "@/constants";
 import Layout from "@/layouts/Layout.astro";
 ---
 
@@ -7,7 +8,7 @@ import Layout from "@/layouts/Layout.astro";
   title="記事一覧 | 福プロ"
   description="福プロ（福山大学学友会プログラミングサークル）の記事一覧ページです。キーワード検索やタグ検索に対応しています。"
   author="福プロ"
-  thumbnail="/favicon.svg"
+  thumbnail={PATH.IMAGES("favicon.svg")}
   tags={[]}
   noindex
 >

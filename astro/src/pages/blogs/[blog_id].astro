@@ -1,6 +1,7 @@
 ---
 import type { MarkdownInstance } from "astro";
 import BlogArticle from "@/components/pages/BlogArticle/index.astro";
+import { PATH } from "@/constants";
 import Layout from "@/layouts/Layout.astro";
 import type { BlogItem } from "@/types";
 
@@ -63,7 +64,7 @@ const blog: BlogItem = {
   title={`${frontmatter.title} | 福プロ`}
   description={frontmatter.description ?? "福プロ（福山大学学友会プログラミングサークル）の記事です。"}
   author={frontmatter.author ?? "福プロ"}
-  thumbnail={frontmatter.thumbnail ?? "/images/default-thumbnail.jpg"}
+  thumbnail={frontmatter.thumbnail ?? PATH.IMAGES("default-thumbnail.jpg")}
   tags={frontmatter.tags}
 >
   <BlogArticle blog={blog} />

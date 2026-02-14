@@ -5,9 +5,12 @@
 
 set -e
 
-CMS_DIR="${CMS_DIR:-/opt/homepage/cms}"
-[ -f "$CMS_DIR/docker-compose.prod.yml" ] || CMS_DIR=/opt/homepage
-[ -f "$CMS_DIR/docker-compose.prod.yml" ] || { echo "docker-compose.prod.yml が見つかりません"; exit 1; }
+if [ -n "${CMS_DIR+set}" ]; then
+  [ -f "$CMS_DIR/docker-compose.prod.yml" ] || { echo "docker-compose.prod.yml が $CMS_DIR に見つかりません"; exit 1; }
+else
+  CMS_DIR=/opt/homepage
+  [ -f "$CMS_DIR/docker-compose.prod.yml" ] || { echo "docker-compose.prod.yml が見つかりません"; exit 1; }
+fi
 
 cd "$CMS_DIR"
 ENV_FILE=".env.production"

@@ -6,3 +6,5 @@
 
 # Terraform
 terraform/terraform.tfvars
+terraform/terraform.tfstate
+terraform/.env.production.generated

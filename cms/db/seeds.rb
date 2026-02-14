@@ -6,6 +6,8 @@ tags = [ "Ruby", "Rails", "JavaScript", "TypeScript", "React", "Astro", "Docker"
   [ name, Tag.find_or_create_by!(name: name) ]
 }.to_h
 
+current_time = Time.zone.now
+
 blogs_data = [
   {
     title: "Railsで始めるAPI開発入門",
@@ -156,7 +158,7 @@ blogs_data = [
     description: "再利用可能でテストしやすいカスタムHookの設計パターン",
     content: "再利用可能なカスタムHookの設計パターンと、テストしやすいHookの書き方を紹介します。",
     author: "高橋美咲",
-    published_at: Time.zone.parse("2026-02-09 14:00"),
+    published_at: current_time + 1.days,
     tags: [ tags["React"], tags["TypeScript"], tags["JavaScript"] ]
   },
   {
@@ -164,7 +166,7 @@ blogs_data = [
     description: "Rails APIとAstroフロントエンドの構築手順とメリット",
     content: "バックエンドにRails API、フロントエンドにAstroを採用したアーキテクチャの構築手順とメリットを解説します。",
     author: "田中太郎",
-    published_at: Time.zone.parse("2026-02-10 10:00"),
+    published_at: current_time + 365.day,
     tags: [ tags["Rails"], tags["Astro"], tags["TypeScript"] ]
   }
 ]

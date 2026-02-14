@@ -5,12 +5,12 @@ module Api
     MAX_SEARCH_TERMS = 10
 
     def index
-      blogs = Blog.includes(:tags, header_image_attachment: :blob).order(published_at: :desc)
+      blogs = filter_by_published_at(Blog.includes(:tags, header_image_attachment: :blob).order(published_at: :desc))
       render json: paginate(blogs)
     end
 
     def search
-      blogs = Blog.includes(:tags, header_image_attachment: :blob).order(published_at: :desc)
+      blogs = filter_by_published_at(Blog.includes(:tags, header_image_attachment: :blob).order(published_at: :desc))
 
       if params[:q].present?
         params[:q].split.first(MAX_SEARCH_TERMS).each do |term|
@@ -29,6 +29,10 @@ module Api
     end
 
     private
+
+    def filter_by_published_at(scope)
+      scope.where("published_at <= ?", Time.zone.now)
+    end
 
     def paginate(scope)
       total_count = scope.count

@@ -1,10 +1,11 @@
 export const PATH = {
-	HOME: "/",
-	BLOGS: "/blogs",
-	FAQ: "/faq/",
+	HOME: "/homepage",
+	BLOGS: "/homepage/blogs",
+	FAQ: "/homepage/faq/",
 	BLOG: {
-		GROUP_ACTIVITIES: "/blogs/group-activities/",
+		GROUP_ACTIVITIES: "/homepage/blogs/group-activities/",
 	},
+	IMAGES: (path: string) => `/homepage/images/${path}`,
 	CMS: {
 		BLOGS: `${import.meta.env.PUBLIC_CMS_URL}/api/blogs`,
 		SEARCH: `${import.meta.env.PUBLIC_CMS_URL}/api/blogs/search`,

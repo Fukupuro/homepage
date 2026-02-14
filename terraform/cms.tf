@@ -165,7 +165,7 @@ resource "null_resource" "deploy_app" {
       "command -v docker >/dev/null 2>&1 || curl -fsSL https://get.docker.com | sudo sh",
       "sudo mkdir -p /opt/homepage && sudo chown ubuntu:ubuntu /opt/homepage",
       "CMS_DIR=/opt/homepage/cms",
-      "if [ -d /opt/homepage/.git ]; then cd /opt/homepage && git fetch origin && git checkout ${var.git_ref} && (git pull origin ${var.git_ref} || true); else git clone --depth 1 --branch ${var.git_ref} ${var.git_repo_url} /opt/homepage; fi",
+      "if [ -d /opt/homepage/.git ]; then cd /opt/homepage && git fetch origin && git checkout ${var.git_ref} && (git pull origin ${var.git_ref} 2>/dev/null || true); else git clone --depth 1 --branch ${var.git_ref} ${var.git_repo_url} /opt/homepage; fi",
       "sudo mv /tmp/.env.production $CMS_DIR/.env.production",
       "sudo chown ubuntu:ubuntu $CMS_DIR/.env.production",
       "chmod +x $CMS_DIR/init-db.sh 2>/dev/null || true",

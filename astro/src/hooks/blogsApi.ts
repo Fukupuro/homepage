@@ -52,12 +52,18 @@ export type SearchApiResponse = {
 };
 
 export type FetchBlogsResult = {
+	status: "success";
 	blogs: BlogItem[];
 	totalPages: number;
 	currentPage: number;
 };
 
-function transformApiResponseToBlogItem(post: SearchPost, basePath: string = "/blogs"): BlogItem {
+export type FailedToFetchBlogsResult = {
+	status: "failed";
+	error: Error;
+};
+
+function transformApiResponseToBlogItem(post: SearchPost, _basePath: string = "/blogs"): BlogItem {
 	return {
 		id: String(post.id),
 		title: post.title,
@@ -101,17 +107,18 @@ async function fetchBlogsFromApi(params: FetchBlogsParams): Promise<FetchBlogsRe
 	const totalPages = json.meta.total_pages;
 	const currentPage = json.meta.current_page;
 
-	return { blogs, totalPages, currentPage };
+	return { status: "success", blogs, totalPages, currentPage };
 }
 
 /**
  * 記事検索
  */
-export async function fetchBlogs(params: FetchBlogsParams = {}): Promise<FetchBlogsResult> {
+export async function fetchBlogs(
+	params: FetchBlogsParams = {},
+): Promise<FetchBlogsResult | FailedToFetchBlogsResult> {
 	try {
 		return await fetchBlogsFromApi(params);
-	} catch (error) {
-		console.error(error);
-		return { blogs: [], totalPages: 0, currentPage: 1 };
+	} catch {
+		return { status: "failed", error: new Error("Failed to fetch blogs") };
 	}
 }

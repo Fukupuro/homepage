@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import useSWR from "swr";
 import { PATH } from "@/constants";
-import { type FetchBlogsResult, fetchBlogs } from "@/hooks/blogsApi";
+import { type FailedToFetchBlogsResult, type FetchBlogsResult, fetchBlogs } from "@/hooks/blogsApi";
 
 /** 検索窓の空白を+に変換して q パラメータ用の文字列を生成 */
 function toQueryString(value: string): string {
@@ -65,7 +65,7 @@ export function useBlogList() {
 		});
 	}, [page]);
 
-	const { data, error, isLoading } = useSWR<FetchBlogsResult>(
+	const { data, error, isLoading } = useSWR<FetchBlogsResult | FailedToFetchBlogsResult>(
 		`${PATH.CMS.BLOGS}?q=${encodeURIComponent(query)}&page=${page}&limit=9`,
 		() => fetchBlogs({ q: query || undefined, page, limit: 9 }),
 	);

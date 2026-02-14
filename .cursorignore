@@ -1,0 +1,5 @@
+/config/master.key
+
+# 環境変数ファイル
+.env
+.env.example

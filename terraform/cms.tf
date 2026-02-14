@@ -22,9 +22,9 @@ terraform {
 }
 
 provider "sakuracloud" {
-  token = var.sakuracloud_token
+  token  = var.sakuracloud_token
   secret = var.sakuracloud_secret
-  zone = "is1a"
+  zone   = "is1a"
 }
 
 # SSH公開鍵
@@ -147,9 +147,9 @@ resource "null_resource" "deploy_app" {
   depends_on = [null_resource.deploy_setup, local_file.env_production]
 
   triggers = {
-    repo    = var.git_repo_url
-    ref     = var.git_ref
-    env     = local_file.env_production.content_sha256
+    repo = var.git_repo_url
+    ref  = var.git_ref
+    env  = local_file.env_production.content_sha256
   }
 
   connection {
@@ -181,7 +181,7 @@ resource "null_resource" "deploy_app" {
 }
 
 output "server_global_ip" {
-  value       = sakuracloud_server.rails_app.ip_address
+  value = sakuracloud_server.rails_app.ip_address
 }
 
 output "app_url" {

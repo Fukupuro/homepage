@@ -40,7 +40,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: bash -c "bin/rails db:prepare && exec bin/dev"
+    command: bash -c "for f in bin/*; do [ -f \"$$f\" ] && sed -i 's/\\r$$//' \"$$f\"; done; bin/rails db:prepare && exec bin/dev"
 
 volumes:
   db-data:

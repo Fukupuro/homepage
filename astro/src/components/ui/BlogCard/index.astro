@@ -3,6 +3,7 @@ import { Icon } from "astro-icon/components";
 import dayjs from "dayjs";
 import { PATH } from "@/constants";
 import type { BlogItem } from "@/types";
+import { blogCardStyles } from "./styles";
 import Thumbnail from "./Thumbnail.astro";
 
 type Props = {
@@ -12,36 +13,22 @@ type Props = {
 const { blog } = Astro.props as Props;
 ---
 
-<div class="blog-card">
+<div class={blogCardStyles.container}>
   <Thumbnail src={blog.thumbnail} title={blog.title} />
   <div>
-    <p class="text-sm text-gray-500">
+    <p class={blogCardStyles.publishedAt}>
       {dayjs(blog.published_at).format("YYYY-MM-DD")}
     </p>
     <a href={`${PATH.BLOGS}/${blog.id}`}>
-      <h3>{blog.title}</h3>
+      <h3 class={blogCardStyles.title}>{blog.title}</h3>
     </a>
-    <div class="flex flex-wrap gap-2">
+    <div class={blogCardStyles.tags}>
       {blog.tags.map((tag) => (
-        <a class="flex items-center" href={`${PATH.BLOGS}?q=tag:${encodeURIComponent(tag)}`}>
+        <a class={blogCardStyles.tag} href={`${PATH.BLOGS}?q=tag:${encodeURIComponent(tag)}`}>
           <Icon name="ri:hashtag" />
-          <span class="text-sm text-gray-500">{tag}</span>
+          <span class={blogCardStyles.tagText}>{tag}</span>
         </a>
       ))}
     </div>
   </div>
 </div>
-
-<style>
-  .blog-card {
-    @apply bg-white p-4 rounded-md sm:block flex justify-between flex-row-reverse border shadow-md;
-  
-    h3 {
-      @apply text-lg text-gray-800 font-bold line-clamp-3;
-
-      &:hover {
-        @apply underline;
-      }
-    }
-  }
-</style>

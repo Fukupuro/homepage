@@ -175,7 +175,10 @@ resource "null_resource" "deploy_app" {
       "sudo chown ubuntu:ubuntu $CMS_DIR/.env.production",
       "chmod +x $CMS_DIR/init-db.sh 2>/dev/null || true",
       "sed -i 's/\\r$//' $CMS_DIR/init-db.sh 2>/dev/null || true",
-      "cd $CMS_DIR && sudo docker compose -f docker-compose.prod.yml --env-file .env.production build --no-cache && sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d",
+      "cd $CMS_DIR && sudo docker compose -f docker-compose.prod.yml --env-file .env.production build --no-cache",
+      "cd $CMS_DIR && sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d db",
+      "cd $CMS_DIR && (set +e; ok=0; for i in $(seq 1 60); do if sudo docker compose -f docker-compose.prod.yml --env-file .env.production exec -T db pg_isready -U cms -d cms_production; then ok=1; break; fi; sleep 5; done; set -e; [ \"$ok\" = 1 ] || exit 1)",
+      "cd $CMS_DIR && sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d",
     ]
   }
 }

@@ -24,7 +24,7 @@ jobs:
         uses: withastro/action@v5
         with:
           path: astro
-          build-cmd: pnpm run fetch:blogs && pnpm run build
+          build-cmd: pnpm exec tsx src/scripts/fetchBlogsDuringBuild.ts && pnpm run build
         env:
           PUBLIC_CMS_URL: ${{ secrets.PUBLIC_CMS_URL }}
 

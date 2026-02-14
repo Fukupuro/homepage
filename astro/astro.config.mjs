@@ -7,7 +7,7 @@ import icon from 'astro-icon';
 import preact from '@astrojs/preact';
 
 // Backend のドメインを image 最適化の許可リストに追加（Thumbnail.astro 等のリモート画像用）
-const backendUrl = process.env.CMS_URL || '';
+const backendUrl = process.env.PUBLIC_CMS_URL || '';
 const imageDomains = ['localhost', '127.0.0.1'];
 try {
 	if (backendUrl) {
@@ -17,7 +17,7 @@ try {
 		}
 	}
 } catch {
-	// CMS_URL が不正な場合は localhost のみ許可
+	// PUBLIC_CMS_URL が不正な場合は localhost のみ許可
 }
 
 // https://astro.build/config

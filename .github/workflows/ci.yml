@@ -184,7 +184,7 @@ jobs:
     env:
       FORM_URL: https://forms.gle/hogefugapiyo
       MAIL_ADDRESS: example@example.com
-      CMS_URL: http://localhost:3000
+      PUBLIC_CMS_URL: http://localhost:3000
     services:
       postgres:
         image: postgres
@@ -256,7 +256,7 @@ jobs:
       - name: Fetch blogs
         run: pnpm exec tsx src/scripts/fetchBlogsDuringBuild.ts
         env:
-          CMS_URL: ${{ env.CMS_URL }}
+          PUBLIC_CMS_URL: ${{ env.PUBLIC_CMS_URL }}
 
       - name: Build
         run: pnpm run build

@@ -99,9 +99,9 @@ async function fetchAllBlogs(cmsUrl: string): Promise<Blog[]> {
 }
 
 export async function fetchBlogsDuringBuild() {
-	const cmsUrl = process.env.CMS_URL;
+	const cmsUrl = process.env.PUBLIC_CMS_URL;
 	if (!cmsUrl) {
-		throw new Error("CMS_URL is not set");
+		throw new Error("PUBLIC_CMS_URL is not set");
 	}
 
 	const data = await fetchAllBlogs(cmsUrl);

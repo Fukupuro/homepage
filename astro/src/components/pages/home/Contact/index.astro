@@ -2,12 +2,9 @@
 import { Icon } from "astro-icon/components";
 import Heading from "@/components/ui/Heading/index.astro";
 
-const formUrl = import.meta.env.FORM_URL;
-const mailAddress = import.meta.env.MAIL_ADDRESS;
+const FORM_URL="https://www.fukuyama-u.ac.jp/"
+const MAIL_ADDRESS="fukuyamaprogramming@gmail.com"
 
-if (!formUrl || !mailAddress) {
-	throw new Error("Contact: FORM_URL または MAIL_ADDRESS が設定されていません");
-}
 ---
 
 <section class="contact">
@@ -21,7 +18,7 @@ if (!formUrl || !mailAddress) {
       見学・入部のご相談、取材のご依頼、ご質問などお気軽にお問い合わせください。
     </p>
     <a
-      href={formUrl}
+      href={FORM_URL}
       target="_blank"
       rel="noopener noreferrer"
       class="contact-button mx-auto inline-block text-center"
@@ -35,10 +32,10 @@ if (!formUrl || !mailAddress) {
       メールでのお問い合わせ
     </h3>
     <a
-      href={`mailto:${mailAddress}`}
+      href={`mailto:${MAIL_ADDRESS}`}
       class="text-center text-gray-800 text-lg underline"
     >
-      {mailAddress}
+      {MAIL_ADDRESS}
     </a>
   </div>
 </section>

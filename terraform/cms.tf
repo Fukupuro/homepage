@@ -109,13 +109,14 @@ resource "time_sleep" "wait_boot" {
   depends_on      = [sakuracloud_server.rails_app]
 }
 
-# 本番用 .env（秘密は .gitignore されたファイルに書き出し）
+# 本番用 .env
 resource "local_file" "env_production" {
   content         = <<-EOT
 RAILS_MASTER_KEY=${var.rails_master_key}
 CMS_DATABASE_PASSWORD=${var.cms_database_password}
 BASIC_AUTH_USER=${var.basic_auth_user}
 BASIC_AUTH_PASSWORD=${var.basic_auth_password}
+CORS_ORIGIN=${var.cors_origin}
 EOT
   filename        = "${path.module}/.env.production.generated"
   file_permission = "0600"

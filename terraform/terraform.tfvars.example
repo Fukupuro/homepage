@@ -12,5 +12,4 @@ basic_auth_password   = "<Basic認証のパスワード>"
 git_repo_url = "https://github.com/Fukupro2023/homepage.git"
 git_ref     = "main"
 
-# 再デプロイ時に値を変えると deploy_app（clone/pull + build + up）が再実行される
-# deploy_trigger = "1"
+cors_origin = "https://example.com"

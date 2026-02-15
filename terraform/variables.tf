@@ -71,3 +71,8 @@ variable "git_ref" {
     error_message = "git_ref には英数字、ドット(.)、アンダースコア(_)、ハイフン(-)、スラッシュ(/) のみ使用できます。"
   }
 }
+
+variable "cors_origin" {
+  type        = string
+  description = "CORS で許可するオリジン"
+}

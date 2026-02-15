@@ -1,9 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import Heading from "@/components/ui/Heading/index.astro";
-
-const FORM_URL = "https://www.fukuyama-u.ac.jp/";
-const MAIL_ADDRESS = "fukuyamaprogramming@gmail.com";
+import { PATH } from "@/constants";
 ---
 
 <section class="contact">
@@ -17,7 +15,7 @@ const MAIL_ADDRESS = "fukuyamaprogramming@gmail.com";
       見学・入部のご相談、取材のご依頼、ご質問などお気軽にお問い合わせください。
     </p>
     <a
-      href={FORM_URL}
+      href={PATH.CONTACT.FORM}
       target="_blank"
       rel="noopener noreferrer"
       class="contact-button mx-auto inline-block text-center"
@@ -31,10 +29,10 @@ const MAIL_ADDRESS = "fukuyamaprogramming@gmail.com";
       メールでのお問い合わせ
     </h3>
     <a
-      href={`mailto:${MAIL_ADDRESS}`}
+      href={`mailto:${PATH.CONTACT.MAIL}`}
       class="text-center text-gray-800 text-lg underline"
     >
-      {MAIL_ADDRESS}
+      {PATH.CONTACT.MAIL}
     </a>
   </div>
 </section>

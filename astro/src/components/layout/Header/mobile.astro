@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import { GITHUB_URL, PATH, X_URL } from "@/constants";
+import { PATH } from "@/constants";
 ---
 
 <div class="sm:hidden relative" id="mobile-nav">
@@ -14,10 +14,10 @@ import { GITHUB_URL, PATH, X_URL } from "@/constants";
       <ul class="flex flex-col items-center gap-8 text-3xl text-gray-700">
         <li><a href={PATH.HOME}>Home</a></li>
         <li><a href={PATH.BLOGS}>Blog</a></li>
-        <li><a href={PATH.FAQ}>FAQ</a></li>
+        <li><a href={PATH.FAQ}>Q&A</a></li>
         <li class="flex gap-3 pt-2">
-          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer"><Icon name="ri:github-fill" size={32} /></a>
-          <a href={X_URL} target="_blank" rel="noopener noreferrer"><Icon name="ri:twitter-x-line" size={32} /></a>
+          <a href={PATH.SNS.GITHUB} target="_blank" rel="noopener noreferrer"><Icon name="ri:github-fill" size={32} /></a>
+          <a href={PATH.SNS.X} target="_blank" rel="noopener noreferrer"><Icon name="ri:twitter-x-line" size={32} /></a>
         </li>
       </ul>
     </div>

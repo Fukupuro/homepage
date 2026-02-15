@@ -1,19 +1,19 @@
 ---
 import { Icon } from "astro-icon/components";
-import { GITHUB_URL, PATH, X_URL } from "@/constants";
+import { PATH } from "@/constants";
 ---
 
 <nav class="hidden sm:block">
   <ul class="flex items-center gap-8 text-lg text-gray-700">
     <li><a href={PATH.HOME}>Home</a></li>
     <li><a href={PATH.BLOGS}>Blog</a></li>
-    <li><a href={PATH.FAQ}>FAQ</a></li>
+    <li><a href={PATH.FAQ}>Q&A</a></li>
     <li>
       <div class="flex items-center gap-2">
-        <a href={GITHUB_URL} target="_blank">
+        <a href={PATH.SNS.GITHUB} target="_blank" rel="noopener noreferrer">
           <Icon name="ri:github-fill" size={24} />
         </a>
-        <a href={X_URL} target="_blank">
+        <a href={PATH.SNS.X} target="_blank" rel="noopener noreferrer">
           <Icon name="ri:twitter-x-line" size={24} />
         </a>
       </div>

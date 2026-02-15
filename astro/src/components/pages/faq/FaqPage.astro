@@ -1,0 +1,206 @@
+---
+import Container from "@/components/ui/Container/index.astro";
+import Heading from "@/components/ui/Heading/index.astro";
+import { PATH } from "@/constants";
+
+const faq = [
+	{
+		question: "プログラミング未経験でも大丈夫ですか？",
+		answer: "大丈夫です！",
+		description:
+			"サークルのほとんどが未経験から始めています。先輩たちが優しくサポートしてくれるので、やる気だけ持ってきてください。",
+	},
+	{
+		question: "文系でも大丈夫ですか？",
+		answer: "大丈夫です！",
+		description: "理系以外の学部学科の人もいます。興味とやる気さえあれば大丈夫です。",
+	},
+	{
+		question: "1年生以外でも入れますか？",
+		answer: "入れます！",
+		description: "2・3年生の途中から入った人もたくさんいます。",
+	},
+	{
+		question: "アルバイトやほかのサークルと両立できますか？",
+		answer: "できます！",
+		description:
+			"半期に１回各班で何曜日にやりたいかという話し合いがあります。そのため、ある程度は融通が利きます。また、強制ではないので、来れない日がある場合は班長に一言声をかけてくれたら大丈夫です。",
+	},
+	{
+		question: "就活に役立ちますか？",
+		answer: "とても役立ちます！",
+		description:
+			"先輩から進路のアドバイスや、就活についての話が聞けたり、開発の手伝いをしてもらえたりします。また、定期的に技術や就活についての講座も開かれるので、ためになる知識が増えます。",
+	},
+	{
+		question: "会費はありますか？",
+		answer: "年会費は500円となっています！",
+		description:
+			"年度始めに500円回収します。サーバーの運用費や技術に関する参考書、デバイス等の費用に使われます。",
+	},
+	{
+		question: "見学・入部方法はどうすればいいですか？",
+		answer: "こちらのフォームへの回答をお願いします！",
+		description: `<a href="${PATH.CONTACT.FORM}" class="faq-link" target="_blank" rel="noopener noreferrer">フォームのリンク</a>`,
+	},
+];
+---
+
+<div class="faq-page">
+  <Container>
+    <Heading as="h1">よくある質問</Heading>
+    <div class="faq-list">
+    {faq.map((item, index) => (
+      <div class="faq-item" data-faq-item>
+        <button
+          type="button"
+          class="faq-question"
+          aria-expanded="false"
+          aria-controls={`faq-answer-${index}`}
+          id={`faq-question-${index}`}
+          data-faq-trigger
+        >
+          <span class="faq-q-icon" aria-hidden="true">Q</span>
+          <span class="faq-question-text">{item.question}</span>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </span>
+        </button>
+        <div
+          id={`faq-answer-${index}`}
+          class="faq-answer"
+          role="region"
+          aria-labelledby={`faq-question-${index}`}
+          hidden
+          data-faq-answer
+        >
+          <p class="faq-answer-label">A</p>
+          <div class="faq-answer-content">
+            <p class="faq-answer-text">{item.answer}</p>
+            <div class="faq-description" set:html={item.description} />
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+  </Container>
+</div>
+
+<script>
+  document.querySelectorAll("[data-faq-trigger]").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const item = trigger.closest("[data-faq-item]");
+      const answer = item?.querySelector("[data-faq-answer]");
+      const isExpanded = trigger.getAttribute("aria-expanded") === "true";
+
+      trigger.setAttribute("aria-expanded", String(!isExpanded));
+      if (answer) {
+        if (isExpanded) {
+          answer.setAttribute("hidden", "");
+        } else {
+          answer.removeAttribute("hidden");
+        }
+        item?.classList.toggle("is-open", !isExpanded);
+      }
+    });
+  });
+</script>
+
+<style>
+  .faq-page {
+    @apply min-h-screen py-8;
+    background-color: #f5f5f7;
+  }
+
+  .faq-list {
+    @apply mt-8 flex flex-col gap-4;
+  }
+
+  .faq-item {
+    @apply rounded-xl bg-white overflow-hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .faq-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .faq-item.is-open {
+    box-shadow: 0 0 0 2px theme("colors.sky.400");
+  }
+
+  .faq-question {
+    @apply w-full flex items-center gap-4 px-5 py-4 text-left;
+    @apply text-gray-900 font-medium;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2;
+    @apply rounded-xl;
+  }
+
+  .faq-q-icon {
+    @apply flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg;
+    @apply text-sky-500 font-serif text-xl font-semibold;
+    background-color: theme("colors.sky.50");
+  }
+
+  .faq-question-text {
+    @apply flex-1 min-w-0;
+  }
+
+  .faq-chevron {
+    @apply flex-shrink-0 text-gray-500 transition-transform duration-200;
+  }
+
+  .faq-item.is-open .faq-chevron {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    @apply border-t border-gray-100 flex gap-4 px-5 py-4;
+  }
+
+  .faq-answer[hidden] {
+    display: none;
+  }
+
+  .faq-answer-label {
+    @apply flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-sky-500 font-serif text-xl font-semibold;
+    background-color: theme("colors.sky.50");
+  }
+
+  .faq-answer-content {
+    @apply flex-1 min-w-0 flex flex-col gap-2;
+  }
+
+  .faq-answer-text {
+    @apply text-gray-600 leading-relaxed m-0;
+  }
+
+  .faq-description {
+    @apply text-gray-600 leading-relaxed;
+  }
+
+  .faq-description :global(p) {
+    @apply m-0;
+  }
+
+  .faq-description :global(p + p) {
+    @apply mt-2;
+  }
+
+  .faq-description :global(.faq-link) {
+    @apply text-sky-600 underline underline-offset-2 hover:text-sky-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-1 rounded;
+  }
+
+  @media (max-width: 640px) {
+    .faq-answer {
+      @apply flex-wrap;
+    }
+
+    .faq-answer-label {
+      @apply w-8 h-8 text-base;
+    }
+  }
+</style>

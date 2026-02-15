@@ -61,18 +61,19 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: cms_production
+    database: <%= ENV.fetch("CMS_DATABASE_NAME", "cms_production") %>
+    host: <%= ENV.fetch("CMS_DATABASE_HOST", "127.0.0.1") %>
     username: cms
     password: <%= ENV["CMS_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
-    database: cms_production_cache
+    database: <%= ENV.fetch("CMS_DATABASE_NAME", "cms_production") %>_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: cms_production_queue
+    database: <%= ENV.fetch("CMS_DATABASE_NAME", "cms_production") %>_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: cms_production_cable
+    database: <%= ENV.fetch("CMS_DATABASE_NAME", "cms_production") %>_cable
     migrations_paths: db/cable_migrate

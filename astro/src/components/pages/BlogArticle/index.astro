@@ -1,5 +1,5 @@
 ---
-import Image from "astro/components/Image.astro";
+import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import dayjs from "dayjs";
 import Heading from "@/components/ui/Heading/index.astro";
@@ -14,7 +14,8 @@ type Props = {
 
 const { blog } = Astro.props as Props;
 
-const { title, description, thumbnail, tags, content, published_at, author } = blog;
+const { title, description, thumbnail, tags, content, published_at, author } =
+	blog;
 ---
 
 {
@@ -37,7 +38,9 @@ const { title, description, thumbnail, tags, content, published_at, author } = b
 			</a>
 		</nav>
 		<Heading as="h1">{title}</Heading>
-		<div class="flex items-center gap-2 justify-between text-base text-gray-500">
+		<div
+			class="flex items-center gap-2 justify-between text-base text-gray-500"
+		>
 			<p>
 				{dayjs(published_at).format("YYYY-MM-DD")}
 			</p>

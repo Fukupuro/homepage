@@ -1,5 +1,5 @@
 ---
-import Image from "astro/components/Image.astro";
+import { Image } from "astro:assets";
 import { PATH } from "@/constants";
 import { blogCardStyles } from "./styles";
 
@@ -12,12 +12,13 @@ const { src, title } = Astro.props as Props;
 ---
 
 {
-  <Image
-    src={src ?? PATH.IMAGES("default-thumbnail.jpg")}
-    alt={`${title}のサムネイル`}
-    width={720}
-    height={400}
-    class={blogCardStyles.thumbnail}
-  />
+	(
+		<Image
+			src={src ?? PATH.IMAGES("default-thumbnail.jpg")}
+			alt={`${title}のサムネイル`}
+			width={720}
+			height={400}
+			class={blogCardStyles.thumbnail}
+		/>
+	)
 }
-

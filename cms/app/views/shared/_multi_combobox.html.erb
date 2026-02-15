@@ -1,0 +1,63 @@
+<%
+  name               ||= "multi_combobox"
+  items              ||= []
+  selected_items     ||= []
+  placeholder        ||= ""
+  creatable          ||= false
+  disabled           ||= false
+  error              ||= false
+  loading            ||= false
+  selected_item_ellipsis ||= false
+  help_message       ||= nil
+  dropdown_help_message  ||= nil
+%>
+
+<div class="multi-combobox<%= ' multi-combobox--disabled' if disabled %><%= ' multi-combobox--error' if error %>"
+     data-controller="multi-combobox"
+     data-multi-combobox-items-value="<%= items.to_json %>"
+     data-multi-combobox-selected-value="<%= selected_items.to_json %>"
+     data-multi-combobox-creatable-value="<%= creatable %>"
+     data-multi-combobox-name-value="<%= name %>"
+     data-multi-combobox-loading-value="<%= loading %>"
+     data-multi-combobox-selected-item-ellipsis-value="<%= selected_item_ellipsis %>">
+
+  <%# --- Input area (tags + text input) --- %>
+  <div class="multi-combobox__input-area" data-multi-combobox-target="inputArea">
+    <div class="multi-combobox__tags" data-multi-combobox-target="tags"></div>
+    <input type="text"
+           class="multi-combobox__input"
+           placeholder="<%= placeholder %>"
+           autocomplete="off"
+           role="combobox"
+           aria-expanded="false"
+           aria-haspopup="listbox"
+           aria-controls="<%= name %>-listbox"
+           aria-autocomplete="list"
+           data-multi-combobox-target="input"
+           data-action="input->multi-combobox#onInput keydown->multi-combobox#onKeydown focus->multi-combobox#onFocus blur->multi-combobox#onBlur"
+           <% if disabled %>disabled<% end %>>
+
+    <%# Loader spinner %>
+    <div class="multi-combobox__loader" data-multi-combobox-target="loader" style="display: none;">
+      <svg class="multi-combobox__spinner" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4 31.4" stroke-linecap="round" />
+      </svg>
+    </div>
+  </div>
+
+  <%# --- Help message --- %>
+  <% if help_message %>
+    <p class="multi-combobox__help"><%= help_message %></p>
+  <% end %>
+
+  <%# --- Dropdown --- %>
+  <div class="multi-combobox__dropdown" data-multi-combobox-target="dropdown">
+    <% if dropdown_help_message %>
+      <p class="multi-combobox__dropdown-help"><%= dropdown_help_message %></p>
+    <% end %>
+    <ul class="multi-combobox__list" id="<%= name %>-listbox" data-multi-combobox-target="list" role="listbox"></ul>
+  </div>
+
+  <%# --- Hidden inputs --- %>
+  <div data-multi-combobox-target="hiddenInputs"></div>
+</div>

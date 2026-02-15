@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cms
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cms_database
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cms -d cms_database"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  cms:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: development
+      PORT: "3000"
+      CMS_DATABASE_HOST: db
+      CMS_DATABASE_USER: cms
+      CMS_DATABASE_PASSWORD: password
+      CMS_DATABASE_NAME: cms_database
+    volumes:
+      - .:/rails
+      - cms-bundle:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: bash -c "for f in bin/*; do [ -f \"$$f\" ] && sed -i 's/\\r$$//' \"$$f\"; done; chmod +x bin/*; bin/rails db:prepare && exec bin/dev"
+
+volumes:
+  db-data:
+  cms-bundle:

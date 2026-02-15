@@ -1,0 +1,5 @@
+sakuracloud_token    = "your-access-token"
+sakuracloud_secret   = "your-access-token-secret"
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+ssh_private_key_path = "~/.ssh/id_rsa"
+disk_size_gb         = 20

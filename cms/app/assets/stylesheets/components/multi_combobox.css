@@ -1,0 +1,272 @@
+/* ==========================================
+   MultiCombobox — SmartHR Design System 準拠
+   ========================================== */
+
+:root {
+  /* --- SmartHR design tokens --- */
+  --mc-color-border:        #d6d6d6;
+  --mc-color-border-focus:  #0077c2;
+  --mc-color-border-error:  #e01e5a;
+  --mc-color-bg:            #ffffff;
+  --mc-color-bg-disabled:   #f5f5f5;
+  --mc-color-text:          #23221f;
+  --mc-color-text-muted:    #706d65;
+  --mc-color-text-disabled: #c1bdb7;
+  --mc-color-tag-bg:        #e8f4fe;
+  --mc-color-tag-text:      #0077c2;
+  --mc-color-tag-remove:    #0077c2;
+  --mc-color-item-hover:    #f2f9ff;
+  --mc-color-item-active:   #e8f4fe;
+  --mc-color-create:        #0077c2;
+  --mc-radius:              6px;
+  --mc-font-size:           14px;
+  --mc-line-height:         1.6;
+  --mc-tag-radius:          4px;
+}
+
+/* --- Container --- */
+.multi-combobox {
+  position: relative;
+  width: 100%;
+  font-size: var(--mc-font-size);
+  line-height: var(--mc-line-height);
+}
+
+/* --- Input area (tags + input) --- */
+.multi-combobox__input-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 1px solid var(--mc-color-border);
+  border-radius: var(--mc-radius);
+  background-color: var(--mc-color-bg);
+  cursor: text;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.multi-combobox__input-area--focused {
+  border-color: var(--mc-color-border-focus);
+  box-shadow: 0 0 0 2px rgb(0 119 194 / 0.2);
+}
+
+.multi-combobox--error .multi-combobox__input-area {
+  border-color: var(--mc-color-border-error);
+}
+.multi-combobox--error .multi-combobox__input-area--focused {
+  box-shadow: 0 0 0 2px rgb(224 30 90 / 0.2);
+}
+
+.multi-combobox--disabled .multi-combobox__input-area {
+  background-color: var(--mc-color-bg-disabled);
+  cursor: not-allowed;
+}
+
+/* --- Tags --- */
+.multi-combobox__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.multi-combobox__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background-color: var(--mc-color-tag-bg);
+  color: var(--mc-color-tag-text);
+  border-radius: var(--mc-tag-radius);
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 100%;
+}
+
+.multi-combobox__tag-label {
+  white-space: nowrap;
+}
+
+/* selectedItemEllipsis: truncate long tag labels */
+.multi-combobox__tag-label--ellipsis {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.multi-combobox__tag-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mc-color-tag-remove);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s;
+}
+
+.multi-combobox__tag-remove:hover {
+  background-color: rgb(0 119 194 / 0.15);
+}
+
+/* --- Text input --- */
+.multi-combobox__input {
+  flex: 1;
+  min-width: 80px;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--mc-font-size);
+  line-height: var(--mc-line-height);
+  color: var(--mc-color-text);
+  background: transparent;
+}
+
+.multi-combobox__input::placeholder {
+  color: var(--mc-color-text-muted);
+}
+
+.multi-combobox--disabled .multi-combobox__input {
+  color: var(--mc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+/* --- Loader (isLoading) --- */
+.multi-combobox__loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.multi-combobox__spinner {
+  width: 18px;
+  height: 18px;
+  color: var(--mc-color-border-focus);
+  animation: mc-spin 0.8s linear infinite;
+}
+
+@keyframes mc-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* --- Help message --- */
+.multi-combobox__help {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--mc-color-text-muted);
+}
+
+.multi-combobox--error .multi-combobox__help {
+  color: var(--mc-color-border-error);
+}
+
+/* --- Dropdown --- */
+.multi-combobox__dropdown {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  border: 1px solid var(--mc-color-border);
+  border-radius: var(--mc-radius);
+  background-color: var(--mc-color-bg);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  z-index: 50;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.multi-combobox__dropdown--open {
+  display: block;
+}
+
+.multi-combobox__dropdown-help {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--mc-color-text-muted);
+  border-bottom: 1px solid var(--mc-color-border);
+}
+
+/* --- List items --- */
+.multi-combobox__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.multi-combobox__list-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--mc-color-text);
+  transition: background-color 0.1s;
+}
+
+.multi-combobox__list-item:hover {
+  background-color: var(--mc-color-item-hover);
+}
+
+/* aria-activedescendant highlight */
+.multi-combobox__list-item--active {
+  background-color: var(--mc-color-item-active);
+}
+
+.multi-combobox__list-item--create {
+  color: var(--mc-color-create);
+  font-weight: 500;
+}
+
+.multi-combobox__list-message {
+  padding: 8px 12px;
+  color: var(--mc-color-text-muted);
+  font-size: 13px;
+}
+
+/* ==========================================
+   Mobile responsive
+   ========================================== */
+
+@media (max-width: 640px) {
+  :root {
+    --mc-font-size: 16px;  /* prevent iOS zoom on focus */
+  }
+
+  .multi-combobox__input-area {
+    min-height: 44px;      /* tap target */
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .multi-combobox__tag {
+    font-size: 14px;
+    padding: 4px 10px;
+  }
+
+  .multi-combobox__tag-label--ellipsis {
+    max-width: 100px;
+  }
+
+  .multi-combobox__tag-remove {
+    width: 22px;
+    height: 22px;
+  }
+
+  .multi-combobox__list-item {
+    padding: 12px 14px;    /* larger tap target */
+  }
+
+  .multi-combobox__dropdown {
+    max-height: 200px;
+  }
+}

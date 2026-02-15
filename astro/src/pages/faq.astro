@@ -1,11 +1,15 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import FaqPage from "@/components/pages/faq/FaqPage.astro";
+import { PATH } from "@/constants";
+import Layout from "@/layouts/Layout.astro";
 ---
 
-<Layout title="よくある質問 | 福プロ">
-	<Welcome />
+<Layout
+  title="よくある質問 | 福プロ"
+  description="福プロ（福山大学学友会プログラミングサークル）のよくある質問ページです。"
+  author="福プロ"
+  thumbnail={PATH.IMAGES("favicon.svg")}
+  tags={["よくある質問", "Q&A"]}
+>
+  <FaqPage />
 </Layout>

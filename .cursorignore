@@ -1,0 +1,10 @@
+/config/master.key
+
+# 環境変数ファイル
+.env
+.env.example
+
+# Terraform
+terraform/terraform.tfvars
+terraform/terraform.tfstate
+terraform/.env.production.generated

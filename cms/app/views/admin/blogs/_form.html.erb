@@ -1,0 +1,169 @@
+<%= form_with(model: [:admin, blog],
+             data: { controller: "markdown-editor" },
+             class: "bg-white rounded-md shadow-md border border-gray-200 flex flex-col") do |f| %>
+
+  <% if blog.errors.any? %>
+    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-3">
+      <p class="font-bold"><%= blog.errors.count %>件のエラーがあります</p>
+      <ul class="mt-1 list-disc list-inside text-sm">
+        <% blog.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# ===== Header: Navigation + Publish ===== %>
+  <div class="flex items-center justify-between px-6 py-3 border-b border-gray-200">
+    <div class="flex items-center gap-4 text-sm">
+      <%= link_to admin_blogs_path, class: "flex items-center gap-1 text-gray-500 hover:text-gray-800" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        一覧に戻る
+      <% end %>
+      <% if blog.persisted? %>
+        <%= link_to "詳細", admin_blog_path(blog), class: "text-gray-500 hover:text-gray-800" %>
+      <% end %>
+    </div>
+    <%= f.submit blog.persisted? ? "更新する" : "保存する",
+        class: "px-5 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md cursor-pointer shadow-md transition-colors" %>
+  </div>
+
+  <%# ===== Title ===== %>
+  <div class="px-8 pt-5 pb-1">
+    <%= f.text_field :title,
+        placeholder: "記事タイトル",
+        autocomplete: "off",
+        class: "w-full text-2xl font-bold text-gray-800 border-none outline-none placeholder-gray-300 focus:ring-0 p-0 bg-transparent" %>
+  </div>
+
+  <%# ===== Tags ===== %>
+  <div class="px-8 pb-4">
+    <%= render "shared/multi_combobox",
+          name: "blog[tag_names]",
+          items: Tag.all.order(:name).map { |t| { label: t.name, value: t.name } },
+          selected_items: blog.tags.map { |t| { label: t.name, value: t.name } },
+          placeholder: "タグを検索・追加...",
+          creatable: true,
+          dropdown_help_message: "リストにないタグも追加できます" %>
+  </div>
+
+  <%# ===== Toolbar ===== %>
+  <div class="flex items-center justify-between px-4 py-1.5 border-y border-gray-200 bg-gray-50/80">
+    <div class="flex items-center gap-1">
+      <button type="button" data-action="markdown-editor#heading" class="toolbar-btn" title="見出し">H</button>
+      <button type="button" data-action="markdown-editor#bold" class="toolbar-btn font-bold" title="太字">B</button>
+      <button type="button" data-action="markdown-editor#italic" class="toolbar-btn italic" title="斜体">I</button>
+      <button type="button" data-action="markdown-editor#strikethrough" class="toolbar-btn line-through" title="取り消し線">S</button>
+      <span class="toolbar-sep"></span>
+      <button type="button" data-action="markdown-editor#link" class="toolbar-btn" title="リンク">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+      </button>
+      <button type="button" data-action="markdown-editor#image" class="toolbar-btn" title="画像">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </button>
+      <span class="toolbar-sep"></span>
+      <button type="button" data-action="markdown-editor#code" class="toolbar-btn" title="インラインコード">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        </svg>
+      </button>
+      <button type="button" data-action="markdown-editor#codeBlock" class="toolbar-btn font-mono" title="コードブロック">{}</button>
+      <button type="button" data-action="markdown-editor#quote" class="toolbar-btn" title="引用">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      </button>
+      <span class="toolbar-sep"></span>
+      <button type="button" data-action="markdown-editor#bulletList" class="toolbar-btn" title="箇条書き">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <button type="button" data-action="markdown-editor#orderedList" class="toolbar-btn font-mono" title="番号付きリスト">1.</button>
+      <button type="button" data-action="markdown-editor#table" class="toolbar-btn" title="テーブル">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18M10 3v18M14 3v18M3 6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6z" />
+        </svg>
+      </button>
+      <button type="button" data-action="markdown-editor#horizontalRule" class="toolbar-btn" title="水平線">--</button>
+    </div>
+
+    <%# View mode tabs %>
+    <div class="flex items-center rounded-md border border-gray-300 overflow-hidden text-xs bg-white">
+      <button type="button"
+              data-action="markdown-editor#switchToEdit"
+              data-markdown-editor-target="editTab"
+              class="px-3 py-1 text-gray-500 hover:bg-gray-100 transition-colors">
+        編集
+      </button>
+      <button type="button"
+              data-action="markdown-editor#switchToSplit"
+              data-markdown-editor-target="splitTab"
+              class="px-3 py-1 bg-gray-200 text-gray-800 font-medium border-x border-gray-300 transition-colors">
+        分割
+      </button>
+      <button type="button"
+              data-action="markdown-editor#switchToPreview"
+              data-markdown-editor-target="previewTab"
+              class="px-3 py-1 text-gray-500 hover:bg-gray-100 transition-colors">
+        プレビュー
+      </button>
+    </div>
+  </div>
+
+  <%# ===== Editor + Preview ===== %>
+  <div class="flex flex-1 min-h-[520px]">
+    <div data-markdown-editor-target="editorPane" class="w-1/2 border-r border-gray-200">
+      <%= f.text_area :content,
+          data: { markdown_editor_target: "editor", action: "input->markdown-editor#onInput" },
+          placeholder: "Markdownで本文を書く...",
+          class: "w-full h-full min-h-[520px] p-5 border-none outline-none resize-none focus:ring-0 font-mono text-sm leading-relaxed text-gray-800 bg-transparent placeholder-gray-300" %>
+    </div>
+    <div data-markdown-editor-target="previewPane" class="w-1/2 overflow-y-auto">
+      <div data-markdown-editor-target="previewContent" class="markdown-body p-5"></div>
+    </div>
+  </div>
+
+  <%# ===== Settings ===== %>
+  <div class="px-6 py-4 border-t border-gray-200">
+    <p class="text-sm text-gray-500 font-medium mb-4">記事の設定</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :description, "概要", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_area :description, rows: 3,
+            placeholder: "記事の概要を入力...",
+            class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
+      </div>
+      <div>
+        <%= f.label :author, "著者", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :author,
+            placeholder: "著者名",
+            class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
+      </div>
+      <div>
+        <%= f.label :published_at, "公開日", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.datetime_local_field :published_at,
+            class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
+      </div>
+      <div>
+        <%= f.label :header_image, "ヘッダー画像", class: "block text-sm font-medium text-gray-700" %>
+        <% if blog.header_image.attached? %>
+          <div class="mt-1 mb-2">
+            <%= image_tag blog.header_image, class: "max-h-32 rounded-md shadow-md" %>
+          </div>
+        <% end %>
+        <%= f.file_field :header_image, accept: "image/*",
+            class: "mt-1 block w-full text-sm text-gray-500
+                    file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0
+                    file:text-sm file:font-medium file:bg-blue-50 file:text-blue-600
+                    hover:file:bg-blue-100" %>
+      </div>
+    </div>
+  </div>
+<% end %>

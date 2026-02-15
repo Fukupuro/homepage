@@ -1,0 +1,41 @@
+<h1><%= @blog.title %></h1>
+
+<% if notice.present? %>
+  <p style="color: green;"><%= notice %></p>
+<% end %>
+
+<dl>
+  <dt>著者</dt>
+  <dd><%= @blog.author %></dd>
+
+  <dt>概要</dt>
+  <dd><%= @blog.description %></dd>
+
+  <dt>本文</dt>
+  <dd><%= markdown(@blog.content) %></dd>
+
+  <dt>タグ</dt>
+  <dd><%= @blog.tags.map(&:name).join(", ") %></dd>
+
+  <dt>ヘッダー画像</dt>
+  <dd>
+    <% if @blog.header_image.attached? %>
+      <%= image_tag @blog.header_image, style: "max-width: 400px;" %>
+    <% else %>
+      なし
+    <% end %>
+  </dd>
+
+  <dt>公開日</dt>
+  <dd><%= @blog.published_at&.strftime("%Y-%m-%d %H:%M") || "未設定" %></dd>
+
+  <dt>作成日</dt>
+  <dd><%= @blog.created_at.strftime("%Y-%m-%d %H:%M") %></dd>
+
+  <dt>更新日</dt>
+  <dd><%= @blog.updated_at.strftime("%Y-%m-%d %H:%M") %></dd>
+</dl>
+
+<%= link_to "編集", edit_admin_blog_path(@blog) %>
+<%= link_to "削除", admin_blog_path(@blog), data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" } %>
+<%= link_to "一覧に戻る", admin_blogs_path %>

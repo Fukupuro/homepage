@@ -1,0 +1,48 @@
+# 本番用: さくらのクラウドなどで Docker 単体で公開する場合
+# 環境変数 RAILS_MASTER_KEY と CMS_DATABASE_PASSWORD はホストの .env.production で設定すること
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      POSTGRES_USER: cms
+      POSTGRES_PASSWORD: ${CMS_DATABASE_PASSWORD}
+      POSTGRES_DB: cms_production
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cms -d cms_production"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+      start_period: 180s
+
+  cms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      RAILS_ENV: production
+      PORT: "3000"
+      CMS_DATABASE_HOST: db
+      CMS_DATABASE_USER: cms
+      CMS_DATABASE_NAME: cms_production
+    ports:
+      - "80:3000"
+    volumes:
+      - cms-storage:/rails/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["./bin/thrust", "./bin/rails", "server"]
+
+volumes:
+  db-data:
+  cms-storage:

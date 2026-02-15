@@ -1,9 +1,40 @@
 ---
+import Footer from "@/components/layout/Footer/index.astro";
 import Header from "@/components/layout/Header/index.astro";
-import "@/styles/global.css";
+import { PATH } from "@/constants";
+import background from "../assets/background.svg";
 
-const props = Astro.props;
+import "@/styles/global.css";
+import "@/styles/github-markdown.css";
+import "@/styles/tokyo-night-dark.css";
+import "@/styles/markdown.css";
+import "katex/dist/katex.min.css";
+import "@splidejs/splide/css/skyblue";
+
+interface Props {
+	title?: string;
+	description?: string;
+	author?: string;
+	thumbnail?: string;
+	tags?: string[];
+	/** クローラーにインデックスさせない（CSRでコンテンツのないページ用） */
+	noindex?: boolean;
+}
+
+const props = Astro.props as Props;
 const title = props.title || "福プロ | 福山大学学友会プログラミングサークル";
+const description =
+	props.description ||
+	"福プロ（福山大学学友会プログラミングサークル）のホームページです。プログラミングやゲーム、メタバースなどITに関する活動をしています。";
+const author = props.author || "福プロ";
+const thumbnailRaw = props.thumbnail || PATH.IMAGES("favicon.svg");
+const siteOrigin = Astro.site ?? Astro.url.origin;
+const thumbnail =
+	thumbnailRaw.startsWith("http://") || thumbnailRaw.startsWith("https://")
+		? thumbnailRaw
+		: new URL(thumbnailRaw, siteOrigin).href;
+const tags = ["福プロ", "福山大学", "プログラミングサークル", ...(props.tags || [])];
+const noindex = props.noindex ?? false;
 ---
 
 <!doctype html>
@@ -11,14 +42,32 @@ const title = props.title || "福プロ | 福山大学学友会プログラミ�
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
+		<link rel="icon" type="image/svg+xml" href={PATH.IMAGES("favicon.svg")} />
+		<link rel="icon" href={`${PATH.HOME}/favicon.ico`} />
 		<title>{title}</title>
+		<meta content={description} name="description">
+		<meta content={author} name="author" />
+
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url.toString()} />
+		<meta property="og:image" content={thumbnail} />
+		<meta property="og:site_name" content="福プロ | 福山大学学友会プログラミングサークル" />
+		<meta property="og:locale" content="ja_JP"  />
+		<meta name="keywords" content={tags.join(",")} />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+		<meta name="generator" content={Astro.generator} />
+
 	</head>
 	<body>
+		<img id="background" src={background.src} alt="" fetchpriority="high" />
 		<Header />
-		<slot />
+		<main>
+			<slot />
+		</main>
+		<Footer />
 	</body>
 </html>
 
@@ -27,6 +76,20 @@ const title = props.title || "福プロ | 福山大学学友会プログラミ�
 	body {
 		margin: 0;
 		width: 100%;
+		min-height: 100%;
+	}
+
+	main {
+		min-height: calc(100vh - 160px);
+	}
+
+	#background {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
 		height: 100%;
+		z-index: -1;
+		filter: blur(100px);
 	}
 </style>

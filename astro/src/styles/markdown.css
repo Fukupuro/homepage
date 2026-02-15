@@ -1,0 +1,160 @@
+/* Markdown 用コードブロックラッパ */
+.code-block {
+	margin: 1.25rem 0;
+	border-radius: 10px;
+	overflow: hidden;
+	background: #02081f; /* 少しだけ明るい黒背景 */
+	border: 1px solid #252f3f;
+}
+
+.code-block-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.45rem 0.9rem;
+	background: #02081f;
+	border-bottom: 1px solid #252f3f;
+	font-size: 0.8rem;
+	color: #9ca3af;
+}
+
+.code-block-filename {
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+		monospace;
+}
+
+.code-block-copy {
+	margin-left: auto; /* ファイル名の有無に関わらず常に右端に表示 */
+	padding: 0.15rem 0.6rem;
+	border-radius: 6px;
+	border: 1px solid #4b5563;
+	background: #02081f;
+	color: #e5e7eb;
+	font-size: 0.75rem;
+	cursor: pointer;
+	transition:
+		background-color 0.12s ease,
+		border-color 0.12s ease,
+		transform 0.05s ease;
+}
+
+.code-block-copy:hover {
+	background: #111827;
+	border-color: #6b7280;
+}
+
+.code-block-copy:active {
+	transform: translateY(1px);
+}
+
+.code-block-inner {
+	background: #02081f;
+}
+
+/* GitHub 由来の pre 背景色を上書き */
+.markdown-body .code-block pre {
+	background-color: #02081f;
+	border-radius: 0;
+	margin: 0; /* フッターの余白をなくす */
+}
+
+.markdown-body .code-block pre code {
+	background-color: transparent;
+}
+
+.markdown-body pre:has(code.language-math) {
+	background: transparent;
+	padding: 1rem 0;
+	margin: 1.25rem 0;
+	overflow-x: auto;
+}
+
+.markdown-body code.language-math {
+	background: none;
+	padding: 0;
+	font-family: inherit;
+	font-size: 1.1em;
+	color: #3d3d3d;
+}
+
+.markdown-body code.language-math .katex {
+	font-size: 1.1em;
+}
+
+/* Markdown の見出しを Heading コンポーネント風に */
+.markdown-body h1,
+.markdown-body h1.markdown-heading {
+	font-size: 2.25rem; /* Tailwind text-4xl */
+	line-height: 2.5rem;
+	font-weight: 700; /* font-bold */
+	color: #1f2937; /* text-gray-800 */
+}
+
+.markdown-body h2,
+.markdown-body h2.markdown-heading {
+	font-size: 1.875rem; /* Tailwind text-3xl */
+	line-height: 2.25rem;
+	font-weight: 700;
+	color: #1f2937;
+}
+
+.markdown-body h3,
+.markdown-body h3.markdown-heading {
+	font-size: 1.5rem; /* Tailwind text-2xl */
+	line-height: 2rem;
+	font-weight: 700;
+	color: #1f2937;
+}
+
+.markdown-body h4,
+.markdown-body h4.markdown-heading {
+	font-size: 1.25rem; /* Tailwind text-xl */
+	line-height: 1.75rem;
+	font-weight: 700;
+	color: #1f2937;
+}
+
+.markdown-body .heading-prefix {
+	color: #3b82f6; /* Tailwind blue-500 */
+	margin-right: 0.5rem; /* Tailwind mr-2 */
+}
+
+.markdown-body ul,
+.markdown-body ol {
+	padding-left: 2em;
+}
+
+.markdown-body ul {
+	list-style-type: disc;
+	list-style-position: inside;
+}
+
+.markdown-body ol {
+	list-style-type: decimal;
+	list-style-position: inside;
+}
+
+.markdown-body li {
+	display: list-item;
+}
+
+.markdown-body li > p {
+	display: inline;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.markdown-body li:has(input[type="checkbox"]) {
+	list-style: none;
+}
+
+.markdown-body blockquote {
+	color: #4b5563;
+	border-left-color: #6b7280;
+}
+
+.markdown-body hr {
+	background-color: #9ca3af;
+	border-bottom-color: #6b7280;
+}

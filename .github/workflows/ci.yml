@@ -4,13 +4,70 @@ on:
   pull_request:
     paths:
       - 'cms/**'
+      - 'astro/**'
+      - 'terraform/**'
+      - '.github/workflows/ci.yml'
   push:
     paths:
       - 'cms/**'
+      - 'astro/**'
+      - 'terraform/**'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
 
 jobs:
-  scan_ruby:
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      cms: ${{ steps.filter.outputs.cms }}
+      astro: ${{ steps.filter.outputs.astro }}
+      terraform: ${{ steps.filter.outputs.terraform }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            cms:
+              - 'cms/**'
+            astro:
+              - 'astro/**'
+            terraform:
+              - 'terraform/**'
+
+  terraform:
+    needs: changes
+    if: needs.changes.outputs.terraform == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.14.5"
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
+
+  scan_ruby:
+    needs: changes
+    if: needs.changes.outputs.cms == 'true'
+    runs-on: ubuntu-latest
+    env:
+      CMS_DATABASE_NAME: cms_production
+      CMS_DATABASE_HOST: 127.0.0.1
 
     defaults:
       run:
@@ -31,7 +88,12 @@ jobs:
         run: bin/brakeman --no-pager
 
   scan_js:
+    needs: changes
+    if: needs.changes.outputs.cms == 'true'
     runs-on: ubuntu-latest
+    env:
+      CMS_DATABASE_NAME: cms_production
+      CMS_DATABASE_HOST: 127.0.0.1
 
     defaults:
       run:
@@ -52,7 +114,12 @@ jobs:
         run: bin/importmap audit
 
   lint:
+    needs: changes
+    if: needs.changes.outputs.cms == 'true'
     runs-on: ubuntu-latest
+    env:
+      CMS_DATABASE_NAME: cms_production
+      CMS_DATABASE_HOST: 127.0.0.1
 
     defaults:
       run:
@@ -73,6 +140,8 @@ jobs:
         run: bin/rubocop -f github
 
   test:
+    needs: changes
+    if: needs.changes.outputs.cms == 'true'
     runs-on: ubuntu-latest
 
     services:
@@ -108,6 +177,8 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          CMS_DATABASE_NAME: cms_production
+          CMS_DATABASE_HOST: 127.0.0.1
           # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:prepare && bin/rails test:system
 
@@ -118,4 +189,120 @@ jobs:
           name: screenshots
           path: ${{ github.workspace }}/cms/tmp/screenshots
           if-no-files-found: ignore
+
+  astro_lint:
+    needs: changes
+    if: needs.changes.outputs.astro == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: astro
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: astro/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (Biome)
+        run: pnpm run lint
+
+  astro_build:
+    needs: changes
+    if: needs.changes.outputs.astro == 'true' || needs.changes.outputs.cms == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: astro
+    env:
+      PUBLIC_CMS_URL: http://localhost:3000
+      CMS_DATABASE_NAME: cms_production
+      CMS_DATABASE_HOST: 127.0.0.1
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install packages (for Rails / pg gem)
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential libpq-dev pkg-config
+        working-directory: .
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.1'
+          bundler-cache: true
+          working-directory: cms
+
+      - name: Prepare Rails database
+        working-directory: cms
+        env:
+          RAILS_ENV: development
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/cms_development
+        run: bin/rails db:prepare
+
+      - name: Start Rails server
+        working-directory: cms
+        env:
+          RAILS_ENV: development
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/cms_development
+        run: bin/rails server -p 3000 &
+        continue-on-error: false
+
+      - name: Wait for Rails API
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/api/blogs > /dev/null 2>&1; then
+              echo "Rails API is ready"
+              exit 0
+            fi
+            echo "Waiting for Rails... ($i/30)"
+            sleep 2
+          done
+          echo "Rails API did not become ready"
+          exit 1
+        working-directory: .
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: astro/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch blogs
+        run: pnpm exec tsx src/scripts/fetchBlogsDuringBuild.ts
+        env:
+          PUBLIC_CMS_URL: ${{ env.PUBLIC_CMS_URL }}
+
+      - name: Build
+        run: pnpm run build
 

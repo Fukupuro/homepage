@@ -1,0 +1,52 @@
+---
+import { Icon } from "astro-icon/components";
+import Heading from "@/components/ui/Heading/index.astro";
+import { PATH } from "@/constants";
+---
+
+<section class="contact">
+  <Heading as="h2">お問い合わせ</Heading>
+  <div class="contact-card">
+    <h3 class="flex items-center gap-2 text-gray-800 text-2xl font-bold">
+      <Icon name="ri:file-edit-line" size={28} class="text-gray-800" />
+      フォームでのお問い合わせ
+    </h3>
+    <p class="text-gray-800 text-lg text-center">
+      見学・入部のご相談、取材のご依頼、ご質問などお気軽にお問い合わせください。
+    </p>
+    <a
+      href={PATH.CONTACT.FORM}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="contact-button mx-auto inline-block text-center"
+    >
+      フォームでのお問い合わせ
+    </a>
+  </div>
+  <div class="contact-card">
+    <h3 class="flex items-center gap-2 text-gray-800 text-2xl font-bold">
+      <Icon name="ri:mail-line" size={28} class="text-gray-800" />
+      メールでのお問い合わせ
+    </h3>
+    <a
+      href={`mailto:${PATH.CONTACT.MAIL}`}
+      class="text-center text-gray-800 text-lg underline"
+    >
+      {PATH.CONTACT.MAIL}
+    </a>
+  </div>
+</section>
+
+<style>
+  .contact {
+    @apply p-4 gap-4 flex flex-col;
+  }
+
+  .contact-card {
+    @apply bg-gray-100 p-4 rounded-md border-2 border-gray-600 shadow-md flex flex-col gap-4;
+  }
+
+  .contact-button {
+    @apply text-white w-64 bg-blue-500 box-border border border-transparent hover:bg-blue-600 focus:ring-4 focus:ring-blue-500 shadow-md font-medium leading-5 rounded-md text-lg px-4 py-2.5 focus:outline-none;
+  }
+</style>

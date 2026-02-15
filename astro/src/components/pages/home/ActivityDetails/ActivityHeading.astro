@@ -1,0 +1,28 @@
+---
+type Props = {
+	title: string;
+};
+
+const props: Props = Astro.props;
+const { title } = props;
+---
+
+<h3>{title}</h3>
+
+<style>
+  h3 {
+    @apply text-2xl font-bold text-gray-800 relative pl-4;
+  }
+
+  h3::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 1em;
+    background-color: theme('colors.blue.400');
+    position: absolute;
+    left: 0;
+    top: 60%;
+    transform: translateY(-50%);
+  }
+</style>

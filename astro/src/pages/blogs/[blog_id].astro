@@ -1,0 +1,71 @@
+---
+import type { MarkdownInstance } from "astro";
+import BlogArticle from "@/components/pages/BlogArticle/index.astro";
+import { PATH } from "@/constants";
+import Layout from "@/layouts/Layout.astro";
+import type { BlogItem } from "@/types";
+
+type MarkdownModule = MarkdownInstance<{
+	title: string;
+	description?: string;
+	thumbnail?: string;
+	tags: string[];
+	author: string;
+	published_at: string;
+}>;
+
+export async function getStaticPaths() {
+	// `src/contents/blogs/[id]/*.md` をすべてビルド対象にする
+	const modules = import.meta.glob("../../contents/blogs/*.md");
+
+	return Object.keys(modules).map((path) => {
+		const filename = path.split("/").pop() ?? "";
+		const blog_id = filename.replace(/\.md$/, "");
+		return { params: { blog_id } };
+	});
+}
+
+const blog_id = Astro.params?.blog_id;
+
+if (!blog_id) {
+	throw new Error("Blog ID is required");
+}
+
+const modules = import.meta.glob<MarkdownModule>("../../contents/blogs/*.md", { eager: true });
+
+// blog_id と一致する Markdown を探す
+const entry = Object.entries(modules).find(([path]) => {
+	const filename = path.split("/").pop() ?? "";
+	return filename.replace(/\.md$/, "") === blog_id;
+});
+
+if (!entry) {
+	throw new Error(`Blog not found for id: ${blog_id}`);
+}
+
+const markdown = entry[1];
+const { frontmatter } = markdown;
+
+const rawContent = markdown.rawContent();
+
+const blog: BlogItem = {
+	id: blog_id,
+	title: frontmatter.title,
+	description: frontmatter.description ?? "",
+	thumbnail: frontmatter.thumbnail,
+	tags: frontmatter.tags,
+	content: rawContent,
+	author: frontmatter.author,
+	published_at: frontmatter.published_at,
+};
+---
+
+<Layout
+  title={`${frontmatter.title} | 福プロ`}
+  description={frontmatter.description ?? "福プロ（福山大学学友会プログラミングサークル）の記事です。"}
+  author={frontmatter.author ?? "福プロ"}
+  thumbnail={frontmatter.thumbnail ?? PATH.IMAGES("default-thumbnail.jpg")}
+  tags={frontmatter.tags}
+>
+  <BlogArticle blog={blog} />
+</Layout>

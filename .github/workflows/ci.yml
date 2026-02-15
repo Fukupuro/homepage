@@ -5,10 +5,15 @@ on:
     paths:
       - 'cms/**'
       - 'astro/**'
+      - 'terraform/**'
+      - '.github/workflows/ci.yml'
   push:
     paths:
       - 'cms/**'
       - 'astro/**'
+      - 'terraform/**'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
 
 jobs:
   changes:
@@ -16,6 +21,7 @@ jobs:
     outputs:
       cms: ${{ steps.filter.outputs.cms }}
       astro: ${{ steps.filter.outputs.astro }}
+      terraform: ${{ steps.filter.outputs.terraform }}
     steps:
       - uses: actions/checkout@v6
       - uses: dorny/paths-filter@v3
@@ -26,6 +32,34 @@ jobs:
               - 'cms/**'
             astro:
               - 'astro/**'
+            terraform:
+              - 'terraform/**'
+
+  terraform:
+    needs: changes
+    if: needs.changes.outputs.terraform == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.14.5"
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
 
   scan_ruby:
     needs: changes

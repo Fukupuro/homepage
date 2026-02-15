@@ -68,8 +68,8 @@ production:
     host: <%= ENV.fetch("CMS_DATABASE_HOST") %>
     username: cms
     password: <%= ENV["CMS_DATABASE_PASSWORD"] %>
-    # 本番では TLS を強制（verify-full でサーバ証明書検証する場合は ENV で上書き可能）
-    sslmode: <%= ENV.fetch("PGSSLMODE", "require") %>
+    # 同一 Docker 内の db コンテナへは SSL 不要。
+    sslmode: "<%= ENV.fetch('PGSSLMODE') { ENV['CMS_DATABASE_HOST'] == 'db' ? 'disable' : 'require' } %>"
   cache:
     <<: *primary_production
     database: <%= ENV.fetch("CMS_DATABASE_NAME") %>_cache

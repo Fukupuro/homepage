@@ -1,5 +1,5 @@
 # 本番用: さくらのクラウドなどで Docker 単体で公開する場合
-# 環境変数 RAILS_MASTER_KEY と CMS_DATABASE_PASSWORD はホストの .env.production で設定すること
+# 環境変数は .env.production で設定すること
 
 services:
   db:
@@ -31,9 +31,9 @@ services:
     environment:
       RAILS_ENV: production
       PORT: "3000"
-      CMS_DATABASE_HOST: db
-      CMS_DATABASE_USER: cms
-      CMS_DATABASE_NAME: cms_production
+      CMS_DATABASE_NAME: ${CMS_DATABASE_NAME:-cms_production}
+      CMS_DATABASE_HOST: ${CMS_DATABASE_HOST:-db}
+      CMS_DATABASE_USER: ${CMS_DATABASE_USER:-cms}
     ports:
       - "80:3000"
     volumes:

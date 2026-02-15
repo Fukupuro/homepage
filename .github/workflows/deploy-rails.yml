@@ -24,13 +24,15 @@ jobs:
       - name: Prepare .env.production
         env:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          CMS_DATABASE_NAME: ${{ secrets.CMS_DATABASE_NAME || 'cms_production' }}
+          CMS_DATABASE_HOST: ${{ secrets.CMS_DATABASE_HOST || 'db' }}
           CMS_DATABASE_PASSWORD: ${{ secrets.CMS_DATABASE_PASSWORD }}
           BASIC_AUTH_USER: ${{ secrets.BASIC_AUTH_USER }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
           CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
         run: |
-          printf 'RAILS_MASTER_KEY=%s\nCMS_DATABASE_PASSWORD=%s\nBASIC_AUTH_USER=%s\nBASIC_AUTH_PASSWORD=%s\nCORS_ORIGIN=%s\n' \
-            "$RAILS_MASTER_KEY" "$CMS_DATABASE_PASSWORD" "$BASIC_AUTH_USER" "$BASIC_AUTH_PASSWORD" "$CORS_ORIGIN" > env.production
+          printf 'RAILS_MASTER_KEY=%s\nCMS_DATABASE_NAME=%s\nCMS_DATABASE_HOST=%s\nCMS_DATABASE_PASSWORD=%s\nBASIC_AUTH_USER=%s\nBASIC_AUTH_PASSWORD=%s\nCORS_ORIGIN=%s\n' \
+            "$RAILS_MASTER_KEY" "$CMS_DATABASE_NAME" "$CMS_DATABASE_HOST" "$CMS_DATABASE_PASSWORD" "$BASIC_AUTH_USER" "$BASIC_AUTH_PASSWORD" "$CORS_ORIGIN" > env.production
 
       - name: Remove old app and clone
         env:

@@ -1,10 +1,5 @@
 name: Deploy Rails
 
-# ======================================================
-# いつ動くか？
-# - main ブランチに push されて cms/ 配下が変更された時
-# - GitHub の画面から手動で実行した時
-# ======================================================
 on:
   push:
     branches: [main]
@@ -12,97 +7,63 @@ on:
       - 'cms/**'
   workflow_dispatch:
 
-env:
-  RUBY_VERSION: "3.4.1"
-
 jobs:
-  # ---- セキュリティスキャン（Ruby） ----
-  # Brakeman で Rails の脆弱性（SQLインジェクション等）を静的解析
-  scan_ruby:
+  deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: cms
     steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
-          working-directory: cms
-      - name: Scan for security vulnerabilities
-        run: bin/brakeman --no-pager
-
-  # ---- セキュリティスキャン（JavaScript） ----
-  # importmap で使っている JS ライブラリに既知の脆弱性がないかチェック
-  scan_js:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: cms
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
-          working-directory: cms
-      - name: Scan for JS vulnerabilities
-        run: bin/importmap audit
-
-  # ---- コードスタイルチェック ----
-  # RuboCop でコーディング規約違反がないかチェック
-  lint:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: cms
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
-          working-directory: cms
-      - name: Lint
-        run: bin/rubocop -f github
-
-  # ---- テスト実行 ----
-  # PostgreSQL を立ち上げてシステムテストを実行
-  test:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres
+      - name: Set up SSH
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
-    defaults:
-      run:
-        working-directory: cms
-    steps:
-      - uses: actions/checkout@v6
-      - name: Install system packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config google-chrome-stable
-        working-directory: .
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
-          working-directory: cms
-      - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails db:prepare && bin/rails test:system
-      - name: Upload screenshots on failure
-        uses: actions/upload-artifact@v6
-        if: failure()
-        with:
-          name: screenshots
-          path: cms/tmp/screenshots
-          if-no-files-found: ignore
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      - name: Prepare .env.production
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          CMS_DATABASE_PASSWORD: ${{ secrets.CMS_DATABASE_PASSWORD }}
+          BASIC_AUTH_USER: ${{ secrets.BASIC_AUTH_USER }}
+          BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
+        run: |
+          printf 'RAILS_MASTER_KEY=%s\nCMS_DATABASE_PASSWORD=%s\nBASIC_AUTH_USER=%s\nBASIC_AUTH_PASSWORD=%s\n' \
+            "$RAILS_MASTER_KEY" "$CMS_DATABASE_PASSWORD" "$BASIC_AUTH_USER" "$BASIC_AUTH_PASSWORD" > env.production
+
+      - name: Remove old app and clone
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          CLONE_URL: ${{ secrets.CLONE_URL || format('https://github.com/{0}.git', github.repository) }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new ubuntu@$DEPLOY_HOST "set -e; sudo rm -rf /opt/homepage; sudo mkdir -p /opt/homepage && sudo chown ubuntu:ubuntu /opt/homepage; git clone -b main $CLONE_URL /opt/homepage"
+
+      - name: Upload .env.production
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new env.production ubuntu@$DEPLOY_HOST:/opt/homepage/cms/.env.production
+
+      - name: Docker build
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new ubuntu@$DEPLOY_HOST "cd /opt/homepage/cms && sudo docker compose -f docker-compose.prod.yml --env-file .env.production build --no-cache"
+
+      - name: Docker up
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new ubuntu@$DEPLOY_HOST '
+            set -e
+            cd /opt/homepage/cms
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d db
+            for i in $(seq 1 60); do
+              if sudo docker compose -f docker-compose.prod.yml --env-file .env.production exec -T db pg_isready -U cms -d cms_production 2>/dev/null; then
+                break
+              fi
+              [ "$i" = 60 ] && exit 1
+              sleep 5
+            done
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+          '

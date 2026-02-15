@@ -14,10 +14,6 @@ terraform {
       source  = "hashicorp/null"
       version = "~> 3.0"
     }
-    local = {
-      source  = "hashicorp/local"
-      version = "~> 2.0"
-    }
   }
 }
 
@@ -109,20 +105,7 @@ resource "time_sleep" "wait_boot" {
   depends_on      = [sakuracloud_server.rails_app]
 }
 
-# 本番用 .env
-resource "local_file" "env_production" {
-  content         = <<-EOT
-RAILS_MASTER_KEY=${var.rails_master_key}
-CMS_DATABASE_PASSWORD=${var.cms_database_password}
-BASIC_AUTH_USER=${var.basic_auth_user}
-BASIC_AUTH_PASSWORD=${var.basic_auth_password}
-CORS_ORIGIN=${var.cors_origin}
-EOT
-  filename        = "${path.module}/.env.production.generated"
-  file_permission = "0600"
-}
-
-# サーバー上に Docker・git を導入し /opt/homepage を準備（アプリはここに git clone）
+# サーバー上に Docker・git を導入し /opt/homepage を準備
 resource "null_resource" "deploy_setup" {
   depends_on = [time_sleep.wait_boot]
 
@@ -139,47 +122,6 @@ resource "null_resource" "deploy_setup" {
       "sudo apt-get update -qq && sudo apt-get install -y git",
       "sudo mkdir -p /opt/homepage",
       "sudo chown ubuntu:ubuntu /opt/homepage",
-    ]
-  }
-}
-
-# CMS アプリを git clone で /opt/homepage に取得し、Docker Compose で起動
-resource "null_resource" "deploy_app" {
-  depends_on = [null_resource.deploy_setup, local_file.env_production]
-
-  triggers = {
-    repo = var.git_repo_url
-    ref  = var.git_ref
-    env  = local_file.env_production.content_sha256
-  }
-
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    host        = sakuracloud_server.rails_app.ip_address
-    private_key = file(pathexpand(var.ssh_private_key_path))
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/.env.production.generated"
-    destination = "/tmp/.env.production"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "set -e",
-      "command -v docker >/dev/null 2>&1 || curl -fsSL https://get.docker.com | sudo sh",
-      "sudo mkdir -p /opt/homepage && sudo chown ubuntu:ubuntu /opt/homepage",
-      "CMS_DIR=/opt/homepage/cms",
-      "if [ -d /opt/homepage/.git ]; then cd /opt/homepage && git fetch origin && git checkout ${var.git_ref} && (git pull origin ${var.git_ref} 2>/dev/null || true); else git clone --depth 1 --branch ${var.git_ref} ${var.git_repo_url} /opt/homepage; fi",
-      "sudo mv /tmp/.env.production $CMS_DIR/.env.production",
-      "sudo chown ubuntu:ubuntu $CMS_DIR/.env.production",
-      "chmod +x $CMS_DIR/init-db.sh 2>/dev/null || true",
-      "sed -i 's/\\r$//' $CMS_DIR/init-db.sh 2>/dev/null || true",
-      "cd $CMS_DIR && sudo docker compose -f docker-compose.prod.yml --env-file .env.production build --no-cache",
-      "cd $CMS_DIR && sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d db",
-      "cd $CMS_DIR && (set +e; ok=0; for i in $(seq 1 60); do if sudo docker compose -f docker-compose.prod.yml --env-file .env.production exec -T db pg_isready -U cms -d cms_production; then ok=1; break; fi; sleep 5; done; set -e; [ \"$ok\" = 1 ] || exit 1)",
-      "cd $CMS_DIR && sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d",
     ]
   }
 }

@@ -10,16 +10,61 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: cms
     steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.4.1"
-          bundler-cache: true
-          working-directory: cms
-      - run: bundle install
-      - name: Deploy to production
-        run: echo "Todo. Deploy to production"
+      - name: Set up SSH
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Prepare .env.production
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          CMS_DATABASE_PASSWORD: ${{ secrets.CMS_DATABASE_PASSWORD }}
+          BASIC_AUTH_USER: ${{ secrets.BASIC_AUTH_USER }}
+          BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+        run: |
+          printf 'RAILS_MASTER_KEY=%s\nCMS_DATABASE_PASSWORD=%s\nBASIC_AUTH_USER=%s\nBASIC_AUTH_PASSWORD=%s\nCORS_ORIGIN=%s\n' \
+            "$RAILS_MASTER_KEY" "$CMS_DATABASE_PASSWORD" "$BASIC_AUTH_USER" "$BASIC_AUTH_PASSWORD" "$CORS_ORIGIN" > env.production
+
+      - name: Remove old app and clone
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          CLONE_URL: ${{ secrets.CLONE_URL || format('https://github.com/{0}.git', github.repository) }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new ubuntu@$DEPLOY_HOST "set -e; sudo rm -rf /opt/homepage; sudo mkdir -p /opt/homepage && sudo chown ubuntu:ubuntu /opt/homepage; git clone -b main $CLONE_URL /opt/homepage"
+
+      - name: Upload .env.production
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new env.production ubuntu@$DEPLOY_HOST:/opt/homepage/cms/.env.production
+
+      - name: Docker build
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new ubuntu@$DEPLOY_HOST "cd /opt/homepage/cms && sudo docker compose -f docker-compose.prod.yml --env-file .env.production build --no-cache"
+
+      - name: Docker up
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new ubuntu@$DEPLOY_HOST '
+            set -e
+            cd /opt/homepage/cms
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d db
+            for i in $(seq 1 60); do
+              if sudo docker compose -f docker-compose.prod.yml --env-file .env.production exec -T db pg_isready -U cms -d cms_production 2>/dev/null; then
+                break
+              fi
+              [ "$i" = 60 ] && exit 1
+              sleep 5
+            done
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+          '

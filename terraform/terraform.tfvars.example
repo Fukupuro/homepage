@@ -1,15 +1,5 @@
-sakuracloud_token     = "your-access-token"
-sakuracloud_secret    = "your-access-token-secret"
-ssh_public_key_path   = "~/.ssh/id_rsa.pub"
-ssh_private_key_path  = "~/.ssh/id_rsa"
-disk_size_gb          = 20
-
-rails_master_key      = "<cms/config/master.key の内容>"
-cms_database_password = "<本番用DBパスワード>"
-basic_auth_user       = "<Basic認証のユーザー名>"
-basic_auth_password   = "<Basic認証のパスワード>"
-
-git_repo_url = "https://github.com/Fukupro2023/homepage.git"
-git_ref     = "main"
-
-cors_origin = "https://example.com"
+sakuracloud_token    = "your-access-token"
+sakuracloud_secret   = "your-access-token-secret"
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+ssh_private_key_path = "~/.ssh/id_rsa"
+disk_size_gb         = 20

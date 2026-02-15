@@ -36,6 +36,8 @@ services:
       CMS_DATABASE_NAME: cms_production
     ports:
       - "80:3000"
+    volumes:
+      - cms-storage:/rails/storage
     depends_on:
       db:
         condition: service_healthy
@@ -43,3 +45,4 @@ services:
 
 volumes:
   db-data:
+  cms-storage:
